@@ -12,6 +12,8 @@ require("packer").startup(function(use)
    -- Rust開発向けツール
    use 'simrat39/rust-tools.nvim' -- Rust Analyzerの機能拡張
 
+   use "L3MON4D3/LuaSnip"
+
    use "hrsh7th/nvim-cmp" -- 補完エンジン
    use "hrsh7th/cmp-nvim-lsp" -- LSP補完の連携
    use "hrsh7th/cmp-path" -- ファイルパス補完
@@ -32,19 +34,19 @@ require("packer").startup(function(use)
        require("copilot_cmp").setup()
      end
    }
-  -- use {
-  --   "CopilotC-Nvim/CopilotChat.nvim",
-  --   dependencies = {
-  --     { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-  --     { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
-  --   },
-  --   build = "make tiktoken", -- Only on MacOS or Linux
-  --   opts = {
-  --     debug = true, -- Enable debugging
-  --     -- See Configuration section for rest
-  --   },
-  --   -- See Commands section for default commands if you want to lazy load on them
-  -- }
+  use {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    dependencies = {
+      { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
+      { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
+    },
+    build = "make tiktoken", -- Only on MacOS or Linux
+    opts = {
+      debug = true, -- Enable debugging
+      -- See Configuration section for rest
+    },
+    -- See Commands section for default commands if you want to lazy load on them
+  }
    use "easymotion/vim-easymotion"
    use "junegunn/vim-easy-align"
    use "lambdalisue/fern.vim"
@@ -196,9 +198,17 @@ vim.api.nvim_create_autocmd("BufWritePre",{
    end,
 })
 
+
 -- nvim-cmpの設定 ----------------------------------------
-local cmp = require"cmp"
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+
 cmp.setup({
+  snnipet = {
+      expand = function(args)
+         luasnip.lsp_expand(args.body)
+      end,
+   },
   mapping = {
     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -206,6 +216,13 @@ cmp.setup({
     ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Enterで選択した補完を確定
     ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
     ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
+    ["<Tab>"] = vim.schedule_wrap(function(fallback)
+      if cmp.visible() and has_words_before() then
+        cmp.confirm({select = true})
+      else
+        fallback()
+      end
+    end),
   },
   sources = cmp.config.sources({
     { name = "nvim_lsp" }, -- LSPからの補完
@@ -213,7 +230,6 @@ cmp.setup({
     { name = "copilot" },  -- Copilot補完
   }),
 })
-
 
 -- 特定のファイルタイプでの設定（例: Python）
 cmp.setup.filetype('python', {
@@ -230,17 +246,6 @@ local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
   return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
 end
-cmp.setup({
-  mapping = {
-    ["<Tab>"] = vim.schedule_wrap(function(fallback)
-      if cmp.visible() and has_words_before() then
-        cmp.confirm({select = true})
-      else
-        fallback()
-      end
-    end),
-  },
-})
 
 -- CopilotChatの設定
 require("CopilotChat").setup({
@@ -378,4 +383,5 @@ require('nvim-treesitter.configs').setup {
     max_file_lines = nil,
   },
 }
+
 

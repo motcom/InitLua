@@ -40,3 +40,6 @@ vim.cmd.colorscheme "gruvbox"
 local my_python = os.getenv("MYPYTHON")
 vim.g.python3_host_prog = my_python
 vim.g.EasyMotion_smatcase = 1
+
+vim.diagnostic.config({severity_sort = true})
+

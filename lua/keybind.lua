@@ -20,7 +20,8 @@ keymap("x", "ga", "<Plug>(EasyAlign)", keyopt)
 
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
-keymap("i", ";;", "<ESC>$A;", keyopt)
+keymap("i", ";;", "<ESC>$A;<CR>", keyopt)
+keymap("i", ",,", "<ESC>$A,<CR>", keyopt)
 keymap("i", "<C-l>", "<ESC>$A", keyopt)
 
 -- terminal
@@ -70,6 +71,16 @@ local function cmd()
    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("A", true, true, true), "n", false)
 end
 vim.api.nvim_create_user_command("Cmd", cmd, {})
+
+-- build -------------------
+local function build()
+   local ext = vim.fn.expand("%:e")
+   if ext == "rs" then
+      vim.cmd("w!")
+      vim.cmd("!cargo build")
+   end
+end
+vim.api.nvim_create_user_command("Build", build, {})
 
 -- run ----------------------------------------
 local function run()

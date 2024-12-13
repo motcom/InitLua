@@ -203,7 +203,22 @@ vim.api.nvim_create_autocmd("BufWritePre",{
 local cmp = require("cmp")
 local luasnip = require("luasnip")
 
+-- 下記cmp_setupで使用
+local has_words_before = function()
+  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
+end
+
+
 cmp.setup({
+
+  window = {
+    documentation = {
+      max_height = 15,
+      max_width = 60,
+    },
+  },
   snnipet = {
       expand = function(args)
          luasnip.lsp_expand(args.body)
@@ -383,5 +398,4 @@ require('nvim-treesitter.configs').setup {
     max_file_lines = nil,
   },
 }
-
 

@@ -12,7 +12,7 @@ keymap("n", "<CR>", "i<CR><ESC>", keyopt)
 keymap("n", "0", "^", keyopt)
 keymap("n", "^", "0", keyopt)
 keymap("n", "s", ":w!<CR>", keyopt)
-keymap("n", "f", "<Plug>(easymotion-overwin-f)", keyopt)
+keymap("n", "<C-f>", "<Plug>(easymotion-overwin-f)", keyopt)
 keymap("n", "<Leader>#", ":ColorizerToggle<CR>"
    , { silent = true })
 keymap("n", "ga", "<Plug>(EasyAlign)", keyopt)
@@ -116,8 +116,20 @@ keymap("n","<Leader>c",":ToggleCopilot<CR>",{ noremap = true, silent = true })
 
 
 ------------------------------------------------
+-- set number hot key ---------------------------
+local function toggle_number()
+   if vim.wo.number then
+      vim.wo.number = false
+   else
+      vim.wo.number = true
+   end
+end
+vim.api.nvim_create_user_command("ToggleNumber", toggle_number, {})
+keymap("n","<Leader>n",":ToggleNumber<CR>",{ noremap = true, silent = true }) 
 
--- goto DefaultWorkSpace
+
+-- set number- ----------------------------------
+
 local my_work = os.getenv("MYHOME") 
 local function goto_workspace()
    vim.cmd("cd " .. my_work)

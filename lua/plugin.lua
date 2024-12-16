@@ -225,6 +225,16 @@ cmp.setup({
       end,
    },
   mapping = {
+   ["<C-y>"] = function(fallback)
+      local entry = cmp.get_selected_entry() -- 現在選択されている補完エントリを取得
+      if entry then
+        local documentation = entry.documentation or '' -- ドキュメントを取得
+        vim.fn.setreg('+', documentation) -- クリップボード("+レジスタ")に保存
+        print("補完ヒントをクリップボードに保存しました!")
+      else
+        fallback() -- エントリがない場合は通常の挙動
+      end
+    end,
     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete(),

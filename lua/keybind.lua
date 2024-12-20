@@ -87,7 +87,11 @@ local function run()
    local ext = vim.fn.expand("%:e")
    if ext == "py" then
       vim.cmd("w!")
-      vim.cmd("!python %")
+      if vim.fn.filereadable("main.py") == 1 then
+         vim.cmd("!python main.py")
+      else
+         vim.cmd("!python %")
+      end
    elseif ext == "cs" then
       vim.cmd("w!")
       vim.cmd("!dotnet build")

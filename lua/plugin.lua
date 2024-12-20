@@ -1,5 +1,4 @@
 
-
 -- packer.nvimの初期化
 require("packer").startup(function(use)
    use "wbthomason/packer.nvim"
@@ -55,7 +54,12 @@ require("packer").startup(function(use)
    use "tpope/vim-commentary"
    use "tpope/vim-surround"
    use "mechatroner/rainbow_csv"
-   use "weirongxu/plantuml-previewer.vim"
+   -- markdown preview
+   use({
+     'iamcco/markdown-preview.nvim',
+     run = function() vim.fn['mkdp#util#install']() end
+   })
+
    use "norcalli/nvim-colorizer.lua"
    use "folke/zen-mode.nvim"
    use "tell-k/vim-autopep8"
@@ -71,13 +75,21 @@ require("packer").startup(function(use)
    }
    use "puremourning/vimspector"
    use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
+
 end)
+
+-- markdown previewの設定
+vim.g.mkdp_auto_start = 0
+vim.g.mkdp_auto_close = 1
+vim.g.mkdp_theme = "dark"
 
 
 -- vim spector の設定 --------------------------------
 vim.g.vimspector_sidebar_width = 85
 vim.g.vimspector_bottombar_height = 15
 vim.g.vimspector_terminal_maxwidth = 70
+
+vim.api.nvim_set_keymap("n", "<F4>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap("n", "<F5>", ":call vimspector#Launch()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<F6>", ":call vimspector#Reset()<CR>", { noremap = true, silent = true })
@@ -90,7 +102,6 @@ vim.api.nvim_set_keymap("n", "<F9>", ":call vimspector#ToggleBreakpoint()<CR>", 
 vim.api.nvim_set_keymap("n", "<F10>", ":call vimspector#StepOver()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<F11>", ":call vimspector#StepInto()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<F12>", ":call vimspector#StepOut()<CR>", { noremap = true, silent = true })
-
 
 
 -- VimSpectorLanchFunction ---------------------------

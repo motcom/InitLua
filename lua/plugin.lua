@@ -80,8 +80,8 @@ end)
 
 -- markdown previewの設定
 vim.g.mkdp_auto_start = 0
-vim.g.mkdp_auto_close = 1
-vim.g.mkdp_theme = "dark"
+vim.g.mkdp_auto_close = 0 
+vim.g.mkdp_theme = "light"
 
 
 -- vim spector の設定 --------------------------------
@@ -367,7 +367,7 @@ function()
    vim.cmd("CopilotChatFix")
 end, {range = true})
 
-vim.api.nvim_create_user_command("Unit",
+vim.api.nvim_create_user_command("Test",
 function()
    vim.cmd("CopilotChatTests")
 end, {range = true})
@@ -391,6 +391,7 @@ vim.api.nvim_create_user_command("Chat",
 function()
    vim.cmd("CopilotChat")
 end, {range = true})
+
 
 -- 補完時の色
 

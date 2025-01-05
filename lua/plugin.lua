@@ -159,7 +159,27 @@ vim.g.EasyMotion_use_smartsign_us = 1
 
 -- LSPの設定
 local lspconfig = require("lspconfig")
-lspconfig.pyright.setup{}
+require('lspconfig').pyright.setup{
+  on_attach = function(client, bufnr)
+    -- キーバインドや設定をLSPにアタッチしたときにカスタマイズ
+    local opts = { noremap=true, silent=true, buffer=bufnr }
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)       -- ホバー表示
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts) -- リネーム
+  end,
+  flags = {
+    debounce_text_changes = 150, -- テキスト変更後の更新待機時間
+  },
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "basic", -- 型チェックの厳密さ ("off", "basic", "strict")
+        autoSearchPaths = true,     -- パスを自動検索
+        useLibraryCodeForTypes = true, -- ライブラリコードの型情報を使用
+      },
+    },
+  },
+}
 
 local rt = require("rust-tools")
 rt.setup({

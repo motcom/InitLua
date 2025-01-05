@@ -221,22 +221,6 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
 end
 
--- debug用の関数
-function printTable(t, indent)
-    indent = indent or 0
-    for key, value in pairs(t) do
-        local spacing = string.rep("  ", indent)
-        if type(value) == "table" then
-            print(spacing .. key .. ":")
-            printTable(value, indent + 1)
-        else
-            print(spacing .. key .. ": " .. tostring(value))
-        end
-    end
-end
-
-
-
 
 cmp.setup({
 
@@ -258,7 +242,6 @@ cmp.setup({
       if entry then
         local completion_item = entry:get_completion_item()
         local documentation = completion_item.documentation.value
-        printTable(completion_item)
         -- 空でない場合のみコピー
         if text_to_copy ~= "" then
           vim.fn.setreg('+', documentation) -- クリップボードにコピー
@@ -270,7 +253,6 @@ cmp.setup({
         fallback()
       end
     end, { 'i', 'c' }), -- インサートモードとコマンドラインモードで有効
-
 
     ["<C-b>"] = cmp.mapping.scroll_docs(-4), -- ドキュメントを上にスクロール
     ["<C-f>"] = cmp.mapping.scroll_docs(4), -- ドキュメントを下にスクロール
@@ -290,6 +272,7 @@ cmp.setup({
     { name = "nvim_lsp" }, -- LSPからの補完
     { name = "path" },     -- ファイルパス補完
     { name = "copilot" },  -- Copilot補完
+    { name = "copilotChat"}, -- CopilotChat補完
   }),
 })
 
@@ -303,11 +286,12 @@ cmp.setup.filetype('python', {
 })
 
 -- 補完時のTabキーの挙動を変更
-local has_words_before = function()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
-end
+-- local has_words_before = function()
+--   if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+--   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+--   return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
+-- end
+
 
 -- CopilotChatの設定
 require("CopilotChat").setup({

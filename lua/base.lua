@@ -43,3 +43,11 @@ vim.g.EasyMotion_smatcase = 1
 
 vim.diagnostic.config({severity_sort = true})
 
+
+-- vifmrc filetype
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = "vifmrc",
+    callback = function()
+        vim.bo.filetype = "vim"
+    end,
+})

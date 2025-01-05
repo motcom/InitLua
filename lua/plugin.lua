@@ -221,6 +221,22 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
 end
 
+-- debug用の関数
+function printTable(t, indent)
+    indent = indent or 0
+    for key, value in pairs(t) do
+        local spacing = string.rep("  ", indent)
+        if type(value) == "table" then
+            print(spacing .. key .. ":")
+            printTable(value, indent + 1)
+        else
+            print(spacing .. key .. ": " .. tostring(value))
+        end
+    end
+end
+
+
+
 
 cmp.setup({
 
@@ -236,18 +252,28 @@ cmp.setup({
       end,
    },
   mapping = {
-   ["<C-y>"] = function(fallback)
-      local entry = cmp.get_selected_entry() -- 現在選択されている補完エントリを取得
+      -- <C-y>でドキュメントをクリップボードにコピー
+    ['<C-y>'] = cmp.mapping(function(fallback)
+      local entry = cmp.get_selected_entry()
       if entry then
-        local documentation = entry.documentation or '' -- ドキュメントを取得
-        vim.fn.setreg('+', documentation) -- クリップボード("+レジスタ")に保存
-        print("補完ヒントをクリップボードに保存しました!")
+        local completion_item = entry:get_completion_item()
+        local documentation = completion_item.documentation.value
+        printTable(completion_item)
+        -- 空でない場合のみコピー
+        if text_to_copy ~= "" then
+          vim.fn.setreg('+', documentation) -- クリップボードにコピー
+        else
+          print("No documentation or detail available")
+        end
       else
-        fallback() -- エントリがない場合は通常の挙動
+        print("No entry selected")
+        fallback()
       end
-    end,
-    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+    end, { 'i', 'c' }), -- インサートモードとコマンドラインモードで有効
+
+
+    ["<C-b>"] = cmp.mapping.scroll_docs(-4), -- ドキュメントを上にスクロール
+    ["<C-f>"] = cmp.mapping.scroll_docs(4), -- ドキュメントを下にスクロール
     ["<C-Space>"] = cmp.mapping.complete(),
     ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Enterで選択した補完を確定
     ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動

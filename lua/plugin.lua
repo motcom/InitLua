@@ -83,7 +83,6 @@ vim.g.mkdp_auto_start = 0
 vim.g.mkdp_auto_close = 0 
 vim.g.mkdp_theme = "light"
 
-
 -- vim spector の設定 --------------------------------
 vim.g.vimspector_sidebar_width = 85
 vim.g.vimspector_bottombar_height = 15
@@ -110,21 +109,20 @@ vim.api.nvim_create_user_command("Reset",
 function()
    local app = vim.fn.expand("%:t:r")
    local result = 
-[[
-{
-  "configurations": {
-    "launch": {
-      "adapter": "CodeLLDB",
-      "filetypes": [ "rust" ],
-      "configuration": {
-        "request": "launch",
-        "program": "${workspaceRoot}/target/debug/]]..app..[["
-      }
-    }
-  }
-}
-]]
-
+   [[
+   {
+     "configurations": {
+       "launch": {
+         "adapter": "CodeLLDB",
+         "filetypes": [ "rust" ],
+         "configuration": {
+           "request": "launch",
+           "program": "${workspaceRoot}/target/debug/]]..app..[["
+         }
+       }
+     }
+   }
+   ]]
 end, {range = true})
 
 
@@ -142,7 +140,6 @@ require("mason").setup({
 )
 require("mason-lspconfig").setup()
 -------------------------------------------------------
-
 
 require('nvim-autopairs').setup({
   disable_filetype = { "TelescopePrompt", "vim" },
@@ -277,7 +274,6 @@ cmp.setup({
     ["<C-b>"] = cmp.mapping.scroll_docs(-4), -- ドキュメントを上にスクロール
     ["<C-f>"] = cmp.mapping.scroll_docs(4), -- ドキュメントを下にスクロール
     ["<C-Space>"] = cmp.mapping.complete(),
-    ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Enterで選択した補完を確定
     ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
     ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
     ["<Tab>"] = vim.schedule_wrap(function(fallback)
@@ -292,7 +288,6 @@ cmp.setup({
     { name = "nvim_lsp" }, -- LSPからの補完
     { name = "path" },     -- ファイルパス補完
     { name = "copilot" },  -- Copilot補完
-    { name = "copilotChat"}, -- CopilotChat補完
   }),
 })
 
@@ -305,17 +300,73 @@ cmp.setup.filetype('python', {
   })
 })
 
--- 補完時のTabキーの挙動を変更
--- local has_words_before = function()
---   if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
---   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
---   return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
--- end
 
 
 -- CopilotChatの設定
 require("CopilotChat").setup({
     show_help = "yes",
+    model = 'gpt-4o',
+    window = {
+      layout = 'vertical', -- 'vertical', 'horizontal', 'float', 'replace'
+      width = 0.3, -- fractional width of parent, or absolute width in columns when > 1
+      height = 0.3, -- fractional height of parent, or absolute height in rows when > 1
+      -- Options below only apply to floating windows
+      relative = 'editor', -- 'editor', 'win', 'cursor', 'mouse'
+      border = 'single', -- 'none', single', 'double', 'rounded', 'solid', 'shadow'
+      row = nil, -- row position of the window, default is centered
+      col = nil, -- column position of the window, default is centered
+      title = 'Copilot Chat', -- title of chat window
+      footer = nil, -- footer of chat window
+      zindex = 1, -- determines if window is on top or below other floating windows
+    },
+     -- default mappings
+    mappings = {
+      complete = {
+        insert = '<Tab>',
+      },
+      close = {
+        normal = 'q',
+        insert = '<C-c>',
+      },
+      reset = {
+        normal = '<C-l>',
+        insert = '<C-l>',
+      },
+      submit_prompt = {
+        normal = '<CR>',
+        insert = '<C-s>',
+      },
+      toggle_sticky = {
+        detail = 'Makes line under cursor sticky or deletes sticky line.',
+        normal = 'gr',
+      },
+      accept_diff = {
+        normal = '<C-y>',
+        insert = '<C-y>',
+      },
+      jump_to_diff = {
+        normal = 'gj',
+      },
+      quickfix_diffs = {
+        normal = 'gq',
+      },
+      yank_diff = {
+        normal = 'gy',
+        register = '"',
+      },
+      show_diff = {
+        normal = 'gd',
+      },
+      show_info = {
+        normal = 'gi',
+      },
+      show_context = {
+        normal = 'gc',
+      },
+      show_help = {
+        normal = 'gh',
+      },
+    },
     prompts = {
         Explain = {
             prompt = "/COPILOT_EXPLAIN コードを日本語で説明してください",
@@ -360,7 +411,6 @@ require("CopilotChat").setup({
                 return require('CopilotChat.select').gitdiff(source, true)
             end,
         },
-
      },
 })
 

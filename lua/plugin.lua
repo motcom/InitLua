@@ -305,7 +305,6 @@ cmp.setup.filetype('python', {
 -- CopilotChatの設定
 require("CopilotChat").setup({
     show_help = "yes",
-    model = 'gpt-4o',
     window = {
       layout = 'vertical', -- 'vertical', 'horizontal', 'float', 'replace'
       width = 0.3, -- fractional width of parent, or absolute width in columns when > 1

@@ -51,3 +51,10 @@ vim.api.nvim_create_autocmd("FileType", { pattern = "fern",
     end,
 })
 
+-- vifmrc filetype
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+    pattern = "vifmrc",
+    callback = function()
+        vim.bo.filetype = "vim"
+    end,
+})

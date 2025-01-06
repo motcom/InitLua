@@ -1,5 +1,4 @@
 
-
 -- packer.nvimの初期化
 require("packer").startup(function(use)
    use "wbthomason/packer.nvim"
@@ -55,7 +54,12 @@ require("packer").startup(function(use)
    use "tpope/vim-commentary"
    use "tpope/vim-surround"
    use "mechatroner/rainbow_csv"
-   use "weirongxu/plantuml-previewer.vim"
+   -- markdown preview
+   use({
+     'iamcco/markdown-preview.nvim',
+     run = function() vim.fn['mkdp#util#install']() end
+   })
+
    use "norcalli/nvim-colorizer.lua"
    use "folke/zen-mode.nvim"
    use "tell-k/vim-autopep8"
@@ -71,13 +75,20 @@ require("packer").startup(function(use)
    }
    use "puremourning/vimspector"
    use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
+
 end)
 
+-- markdown previewの設定
+vim.g.mkdp_auto_start = 0
+vim.g.mkdp_auto_close = 0 
+vim.g.mkdp_theme = "light"
 
 -- vim spector の設定 --------------------------------
 vim.g.vimspector_sidebar_width = 85
 vim.g.vimspector_bottombar_height = 15
 vim.g.vimspector_terminal_maxwidth = 70
+
+vim.api.nvim_set_keymap("n", "<F4>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap("n", "<F5>", ":call vimspector#Launch()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<F6>", ":call vimspector#Reset()<CR>", { noremap = true, silent = true })
@@ -92,28 +103,26 @@ vim.api.nvim_set_keymap("n", "<F11>", ":call vimspector#StepInto()<CR>", { norem
 vim.api.nvim_set_keymap("n", "<F12>", ":call vimspector#StepOut()<CR>", { noremap = true, silent = true })
 
 
-
 -- VimSpectorLanchFunction ---------------------------
 
 vim.api.nvim_create_user_command("Reset", 
 function()
    local app = vim.fn.expand("%:t:r")
    local result = 
-[[
-{
-  "configurations": {
-    "launch": {
-      "adapter": "CodeLLDB",
-      "filetypes": [ "rust" ],
-      "configuration": {
-        "request": "launch",
-        "program": "${workspaceRoot}/target/debug/]]..app..[["
-      }
-    }
-  }
-}
-]]
-
+   [[
+   {
+     "configurations": {
+       "launch": {
+         "adapter": "CodeLLDB",
+         "filetypes": [ "rust" ],
+         "configuration": {
+           "request": "launch",
+           "program": "${workspaceRoot}/target/debug/]]..app..[["
+         }
+       }
+     }
+   }
+   ]]
 end, {range = true})
 
 
@@ -132,7 +141,6 @@ require("mason").setup({
 require("mason-lspconfig").setup()
 -------------------------------------------------------
 
-
 require('nvim-autopairs').setup({
   disable_filetype = { "TelescopePrompt", "vim" },
   enable_check_bracket_line = true, -- 同じ行でのみ括弧を閉じる
@@ -148,7 +156,27 @@ vim.g.EasyMotion_use_smartsign_us = 1
 
 -- LSPの設定
 local lspconfig = require("lspconfig")
-lspconfig.pyright.setup{}
+require('lspconfig').pyright.setup{
+  on_attach = function(client, bufnr)
+    -- キーバインドや設定をLSPにアタッチしたときにカスタマイズ
+    local opts = { noremap=true, silent=true, buffer=bufnr }
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)       -- ホバー表示
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts) -- リネーム
+  end,
+  flags = {
+    debounce_text_changes = 150, -- テキスト変更後の更新待機時間
+  },
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "basic", -- 型チェックの厳密さ ("off", "basic", "strict")
+        autoSearchPaths = true,     -- パスを自動検索
+        useLibraryCodeForTypes = true, -- ライブラリコードの型情報を使用
+      },
+    },
+  },
+}
 
 local rt = require("rust-tools")
 rt.setup({
@@ -225,20 +253,27 @@ cmp.setup({
       end,
    },
   mapping = {
-   ["<C-y>"] = function(fallback)
-      local entry = cmp.get_selected_entry() -- 現在選択されている補完エントリを取得
+      -- <C-y>でドキュメントをクリップボードにコピー
+    ['<C-y>'] = cmp.mapping(function(fallback)
+      local entry = cmp.get_selected_entry()
       if entry then
-        local documentation = entry.documentation or '' -- ドキュメントを取得
-        vim.fn.setreg('+', documentation) -- クリップボード("+レジスタ")に保存
-        print("補完ヒントをクリップボードに保存しました!")
+        local completion_item = entry:get_completion_item()
+        local documentation = completion_item.documentation.value
+        -- 空でない場合のみコピー
+        if text_to_copy ~= "" then
+          vim.fn.setreg('+', documentation) -- クリップボードにコピー
+        else
+          print("No documentation or detail available")
+        end
       else
-        fallback() -- エントリがない場合は通常の挙動
+        print("No entry selected")
+        fallback()
       end
-    end,
-    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+    end, { 'i', 'c' }), -- インサートモードとコマンドラインモードで有効
+
+    ["<C-b>"] = cmp.mapping.scroll_docs(-4), -- ドキュメントを上にスクロール
+    ["<C-f>"] = cmp.mapping.scroll_docs(4), -- ドキュメントを下にスクロール
     ["<C-Space>"] = cmp.mapping.complete(),
-    ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Enterで選択した補完を確定
     ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
     ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
     ["<Tab>"] = vim.schedule_wrap(function(fallback)
@@ -265,16 +300,73 @@ cmp.setup.filetype('python', {
   })
 })
 
--- 補完時のTabキーの挙動を変更
-local has_words_before = function()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
-end
+
 
 -- CopilotChatの設定
 require("CopilotChat").setup({
     show_help = "yes",
+    model = 'gpt-4o',
+    window = {
+      layout = 'vertical', -- 'vertical', 'horizontal', 'float', 'replace'
+      width = 0.3, -- fractional width of parent, or absolute width in columns when > 1
+      height = 0.3, -- fractional height of parent, or absolute height in rows when > 1
+      -- Options below only apply to floating windows
+      relative = 'editor', -- 'editor', 'win', 'cursor', 'mouse'
+      border = 'single', -- 'none', single', 'double', 'rounded', 'solid', 'shadow'
+      row = nil, -- row position of the window, default is centered
+      col = nil, -- column position of the window, default is centered
+      title = 'Copilot Chat', -- title of chat window
+      footer = nil, -- footer of chat window
+      zindex = 1, -- determines if window is on top or below other floating windows
+    },
+     -- default mappings
+    mappings = {
+      complete = {
+        insert = '<Tab>',
+      },
+      close = {
+        normal = 'q',
+        insert = '<C-c>',
+      },
+      reset = {
+        normal = '<C-l>',
+        insert = '<C-l>',
+      },
+      submit_prompt = {
+        normal = '<CR>',
+        insert = '<C-s>',
+      },
+      toggle_sticky = {
+        detail = 'Makes line under cursor sticky or deletes sticky line.',
+        normal = 'gr',
+      },
+      accept_diff = {
+        normal = '<C-y>',
+        insert = '<C-y>',
+      },
+      jump_to_diff = {
+        normal = 'gj',
+      },
+      quickfix_diffs = {
+        normal = 'gq',
+      },
+      yank_diff = {
+        normal = 'gy',
+        register = '"',
+      },
+      show_diff = {
+        normal = 'gd',
+      },
+      show_info = {
+        normal = 'gi',
+      },
+      show_context = {
+        normal = 'gc',
+      },
+      show_help = {
+        normal = 'gh',
+      },
+    },
     prompts = {
         Explain = {
             prompt = "/COPILOT_EXPLAIN コードを日本語で説明してください",
@@ -319,7 +411,6 @@ require("CopilotChat").setup({
                 return require('CopilotChat.select').gitdiff(source, true)
             end,
         },
-
      },
 })
 
@@ -356,7 +447,7 @@ function()
    vim.cmd("CopilotChatFix")
 end, {range = true})
 
-vim.api.nvim_create_user_command("Unit",
+vim.api.nvim_create_user_command("Test",
 function()
    vim.cmd("CopilotChatTests")
 end, {range = true})
@@ -380,6 +471,7 @@ vim.api.nvim_create_user_command("Chat",
 function()
    vim.cmd("CopilotChat")
 end, {range = true})
+
 
 -- 補完時の色
 

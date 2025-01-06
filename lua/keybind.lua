@@ -17,6 +17,7 @@ keymap("n", "<Leader>#", ":ColorizerToggle<CR>"
    , { silent = true })
 keymap("n", "ga", "<Plug>(EasyAlign)", keyopt)
 keymap("x", "ga", "<Plug>(EasyAlign)", keyopt)
+keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
@@ -114,7 +115,6 @@ vim.api.nvim_create_user_command("Test", test, {})
 vim.api.nvim_create_user_command("ToggleCopilot", toggle_copilot, {})
 keymap("n","<Leader>c",":ToggleCopilot<CR>",{ noremap = true, silent = true })
 
-
 ------------------------------------------------
 -- set number hot key ---------------------------
 local function toggle_number()
@@ -137,6 +137,18 @@ local function goto_workspace()
 end
 vim.api.nvim_create_user_command("MyHome", goto_workspace, {})
 keymap("n","<Leader>h",":MyHome<CR>",{ noremap = true, silent = true })
+
+
+local my_tmp = os.getenv("MYTMP") 
+local function goto_tmp()
+   vim.cmd("cd " .. my_tmp)
+   vim.cmd("w! tmp.py")
+   print("cd " .. my_tmp .. "tmp.py")
+   
+end
+vim.api.nvim_create_user_command("MyTmp", goto_tmp, {})
+keymap("n","<Leader>t",":MyTmp<CR>",{ noremap = true, silent = true })
+
 
 -- my function ----------------------------------
 

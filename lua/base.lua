@@ -43,3 +43,11 @@ vim.g.EasyMotion_smatcase = 1
 
 vim.diagnostic.config({severity_sort = true})
 
+
+vim.api.nvim_create_autocmd("FileType", { pattern = "fern",
+    callback = function()
+        -- cキーでディレクトリをcd
+        vim.api.nvim_buf_set_keymap(0, 'n', 'c', '<Plug>(fern-action-cd)', { noremap = false, silent = true })
+    end,
+})
+

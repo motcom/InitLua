@@ -1,6 +1,7 @@
 
 -- packer.nvimの初期化
 require("packer").startup(function(use)
+
    use "wbthomason/packer.nvim"
    use "neovim/nvim-lspconfig"
    -- LSP関連プラグイン
@@ -59,6 +60,8 @@ require("packer").startup(function(use)
      'iamcco/markdown-preview.nvim',
      run = function() vim.fn['mkdp#util#install']() end
    })
+   use 'aklt/plantuml-syntax'
+   -- markdown preview 
 
    use "norcalli/nvim-colorizer.lua"
    use "folke/zen-mode.nvim"
@@ -75,6 +78,7 @@ require("packer").startup(function(use)
    }
    use "puremourning/vimspector"
    use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
+   use "lukas-reineke/indent-blankline.nvim"
 
 end)
 
@@ -82,6 +86,7 @@ end)
 vim.g.mkdp_auto_start = 0
 vim.g.mkdp_auto_close = 0 
 vim.g.mkdp_theme = "light"
+
 
 -- vim spector の設定 --------------------------------
 vim.g.vimspector_sidebar_width = 85
@@ -305,6 +310,7 @@ cmp.setup.filetype('python', {
 -- CopilotChatの設定
 require("CopilotChat").setup({
     show_help = "yes",
+    chat_autocomplete = false,
     window = {
       layout = 'vertical', -- 'vertical', 'horizontal', 'float', 'replace'
       width = 0.3, -- fractional width of parent, or absolute width in columns when > 1
@@ -322,6 +328,7 @@ require("CopilotChat").setup({
     mappings = {
       complete = {
         insert = '<Tab>',
+        
       },
       close = {
         normal = 'q',
@@ -446,7 +453,7 @@ function()
    vim.cmd("CopilotChatFix")
 end, {range = true})
 
-vim.api.nvim_create_user_command("Test",
+vim.api.nvim_create_user_command("TestCase",
 function()
    vim.cmd("CopilotChatTests")
 end, {range = true})
@@ -486,7 +493,8 @@ vim.cmd [[
 ]]
 
 require('nvim-treesitter.configs').setup {
-   ensure_installed = {"lua","python","toml","json","rust"},
+   ensure_installed = {"lua","python","toml","json",
+      "rust","markdown"},
    indent = {
       enable = true
    },
@@ -498,5 +506,11 @@ require('nvim-treesitter.configs').setup {
     extended_mode = true,
     max_file_lines = nil,
   },
+   fold = {
+      enable = true
+   },
 }
+
+-- インデントブランクラインの設定
+require("ibl").setup()
 

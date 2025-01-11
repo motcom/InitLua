@@ -6,7 +6,8 @@ local keyopt    = { noremap = true, silent = true }
 vim.g.mapleader = " "
 
 -- normal
-keymap("n", "<Leader>t", ":Test<CR>", keyopt)
+keymap("n","<Leader>$",":e $MYVIMRC<CR>",keyopt)
+keymap("n", "<Leader>t", ":TestRun<CR>", keyopt)
 keymap("n", "<Leader>r", ":Run<CR>", keyopt)
 keymap("n", "<CR>", "i<CR><ESC>", keyopt)
 keymap("n", "0", "^", keyopt)
@@ -52,7 +53,7 @@ vim.api.nvim_create_user_command("ToggleFern", toggle_fern, {})
 
 -- toggle copilot
 
-local copilot_flag = true
+local copilot_flag = false
 local function toggle_copilot()
    if copilot_flag then
       vim.cmd("Copilot disable")    
@@ -108,16 +109,22 @@ end
 vim.api.nvim_create_user_command("Run", run, {})
 
 -- test ----------------------------------------
-local function test()
+local function test_run()
    local ext = vim.fn.expand("%:e")
    if ext == "rs" then
       vim.cmd("w!")
       vim.cmd("!cargo test")
    end
 end
-vim.api.nvim_create_user_command("Test", test, {})
+vim.api.nvim_create_user_command("Test", test_run, {})
+
+
+-- copilot chat key bind-------------------------------------
+
 vim.api.nvim_create_user_command("ToggleCopilot", toggle_copilot, {})
-keymap("n","<Leader>c",":ToggleCopilot<CR>",{ noremap = true, silent = true })
+keymap("n","<Leader>C",":ToggleCopilot<CR>",{ noremap = true, silent = true })
+keymap("n","<Leader>c",":Chat<CR>",{noremap=true,silent=true})
+vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化
 
 ------------------------------------------------
 -- set number hot key ---------------------------
@@ -129,7 +136,7 @@ local function toggle_number()
    end
 end
 vim.api.nvim_create_user_command("ToggleNumber", toggle_number, {})
-keymap("n","<Leader>n",":ToggleNumber<CR>",{ noremap = true, silent = true }) 
+keymap("n","<Leader>n",":ToggleNumber<CR>",{ noremap = true, silent = true })
 
 
 -- set number- ----------------------------------
@@ -148,10 +155,8 @@ local function goto_tmp()
    vim.cmd("cd " .. my_tmp)
    vim.cmd("w! tmp.py")
    print("cd " .. my_tmp .. "tmp.py")
-   
 end
 vim.api.nvim_create_user_command("MyTmp", goto_tmp, {})
-keymap("n","<Leader>t",":MyTmp<CR>",{ noremap = true, silent = true })
 
 
 -- my function ----------------------------------
@@ -208,4 +213,17 @@ vim.api.nvim_create_user_command('Tree', function()
     vim.cmd('terminal cargo_modules_binary')
     vim.cmd('startinsert')
 end, {})
+
+-- copy diagnostics to clipboard
+vim.api.nvim_set_keymap('n', 'yd', '<cmd>lua CopyDiagnosticsToClipboard()<CR>', { noremap = true, silent = true })
+function CopyDiagnosticsToClipboard()
+  local diagnostics = vim.diagnostic.get(0, {lnum = vim.fn.line('.') - 1})
+  if #diagnostics > 0 then
+    local message = diagnostics[1].message
+    vim.fn.setreg('+', message)  -- クリップボードにコピー
+    print("Diagnostics copied to clipboard: " .. message)
+  else
+    print("No diagnostics at current line")
+  end
+end
 

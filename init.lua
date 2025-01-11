@@ -1,3 +1,6 @@
 require("base")
 require("keybind")
-require("plugin")
+require("plugin_import")
+require("plugin_base")
+require("plugin_lsp")
+require("plugin_copilot")

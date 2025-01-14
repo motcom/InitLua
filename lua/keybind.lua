@@ -1,5 +1,4 @@
 
-
 -- ########### key map grp ###########----------------
 local keymap    = vim.api.nvim_set_keymap
 local keyopt    = { noremap = true, silent = true }
@@ -35,7 +34,7 @@ keymap("t", "<C-c>", "<C-\\><C-n>:q<CR>", keyopt)
 
 -- MiniMap toggle
 keymap("n", "<Leader>m", ":MinimapToggle<CR>", keyopt)
-keymap('n', '<Leader><Leader>', ':ToggleFern<CR>', { noremap = true, silent = true })
+keymap('n', '<Leader><Leader>', ':ToggleFern<CR>', keyopt)
 keymap("n", "<Leader>z", ":ZenMode<CR>", keyopt)
 
 -- Fern をトグルする関数
@@ -122,8 +121,8 @@ vim.api.nvim_create_user_command("Test", test_run, {})
 -- copilot chat key bind-------------------------------------
 
 vim.api.nvim_create_user_command("ToggleCopilot", toggle_copilot, {})
-keymap("n","<Leader>C",":ToggleCopilot<CR>",{ noremap = true, silent = true })
-keymap("n","<Leader>c",":Chat<CR>",{noremap=true,silent=true})
+keymap("n","<Leader>C",":ToggleCopilot<CR>",keyopt)
+keymap("n","<Leader>c",":Chat<CR>",keyopt)
 vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化
 
 ------------------------------------------------
@@ -136,7 +135,7 @@ local function toggle_number()
    end
 end
 vim.api.nvim_create_user_command("ToggleNumber", toggle_number, {})
-keymap("n","<Leader>n",":ToggleNumber<CR>",{ noremap = true, silent = true })
+keymap("n","<Leader>n",":ToggleNumber<CR>",keyopt)
 
 
 -- set number- ----------------------------------
@@ -147,7 +146,7 @@ local function goto_workspace()
    print("cd " .. my_work)
 end
 vim.api.nvim_create_user_command("MyHome", goto_workspace, {})
-keymap("n","<Leader>h",":MyHome<CR>",{ noremap = true, silent = true })
+keymap("n","<Leader>h",":MyHome<CR>",keyopt)
 
 
 local my_tmp = os.getenv("MYTMP") 
@@ -215,7 +214,7 @@ vim.api.nvim_create_user_command('Tree', function()
 end, {})
 
 -- copy diagnostics to clipboard
-vim.api.nvim_set_keymap('n', 'yd', '<cmd>lua CopyDiagnosticsToClipboard()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'yd', '<cmd>lua CopyDiagnosticsToClipboard()<CR>', keyopt)
 function CopyDiagnosticsToClipboard()
   local diagnostics = vim.diagnostic.get(0, {lnum = vim.fn.line('.') - 1})
   if #diagnostics > 0 then

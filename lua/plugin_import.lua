@@ -60,7 +60,9 @@ require("packer").startup(function(use)
      'iamcco/markdown-preview.nvim',
      run = function() vim.fn['mkdp#util#install']() end
    })
-   use 'aklt/plantuml-syntax'
+   use "aklt/plantuml-syntax"
+   use "weirongxu/plantuml-previewer.vim"
+   
    -- markdown preview 
 
    use "norcalli/nvim-colorizer.lua"

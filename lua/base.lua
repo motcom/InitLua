@@ -20,7 +20,6 @@ op.title       = false
 op.ignorecase  = true
 op.shortmess:append "I"
 
-
 -- コメントアウトの自動挿入を無効化
 vim.api.nvim_command('autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o')
 
@@ -44,12 +43,7 @@ vim.g.EasyMotion_smatcase = 1
 vim.diagnostic.config({severity_sort = true})
 
 
-vim.api.nvim_create_autocmd("FileType", { pattern = "fern",
-    callback = function()
-        -- cキーでディレクトリをcd
-        vim.api.nvim_buf_set_keymap(0, 'n', 'c', '<Plug>(fern-action-cd)', { noremap = false, silent = true })
-    end,
-})
+
 
 -- vifmrc filetype
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {

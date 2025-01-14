@@ -1,3 +1,12 @@
+-- fileを開いた時に、そのディレクトリに移動する 
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        local dir = vim.fn.fnamemodify(vim.fn.expand("%:p"), ":h")
+        if dir ~= "" then
+            vim.cmd("cd " .. dir)
+        end
+    end,
+})
 
 -- minimap の設定
 vim.g.minimap_width = 10
@@ -12,7 +21,7 @@ vim.g.mkdp_auto_start = 0
 vim.g.mkdp_auto_close = 0 
 vim.g.mkdp_theme = "light"
 vim.api.nvim_set_keymap("n", "<F4>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
-
+vim.g.plantuml_previewer_plantuml_jar_path = "plant_uml.jar"
 -- インデントブランクラインの設定
 require("ibl").setup()
 

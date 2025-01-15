@@ -22,8 +22,6 @@ vim.g.mkdp_auto_close = 0
 vim.g.mkdp_theme = "light"
 vim.api.nvim_set_keymap("n", "<F4>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
 vim.g.plantuml_previewer_plantuml_jar_path = "plant_uml.jar"
--- インデントブランクラインの設定
-require("ibl").setup()
 
 -- 補完時の色
 vim.cmd [[
@@ -83,3 +81,4 @@ zen_mode.setup({
     twilight = { enabled = true },
   },
 })
+

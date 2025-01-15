@@ -80,6 +80,5 @@ require("packer").startup(function(use)
    }
    use "puremourning/vimspector"
    use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
-   use "lukas-reineke/indent-blankline.nvim"
 
 end)

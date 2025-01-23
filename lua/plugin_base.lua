@@ -1,3 +1,7 @@
+
+-- fern default hidden
+vim.g["fern#default_hidden"] = 1
+
 -- fileを開いた時に、そのディレクトリに移動する 
 vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
@@ -81,4 +85,5 @@ zen_mode.setup({
     twilight = { enabled = true },
   },
 })
+
 

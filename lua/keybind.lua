@@ -6,8 +6,6 @@ vim.g.mapleader = " "
 
 -- normal
 keymap("n","<Leader>$",":e $MYVIMRC<CR>",keyopt)
-keymap("n", "<Leader>t", ":TestRun<CR>", keyopt)
-keymap("n", "<Leader>r", ":Run<CR>", keyopt)
 keymap("n", "<CR>", "i<CR><ESC>", keyopt)
 keymap("n", "0", "^", keyopt)
 keymap("n", "^", "0", keyopt)
@@ -73,49 +71,6 @@ local function cmd()
 end
 vim.api.nvim_create_user_command("Cmd", cmd, {})
 
--- build -------------------
-local function build()
-   local ext = vim.fn.expand("%:e")
-   if ext == "rs" then
-      vim.cmd("w!")
-      vim.cmd("!cargo build")
-   end
-end
-vim.api.nvim_create_user_command("Build", build, {})
-
--- run ----------------------------------------
-local function run()
-   local ext = vim.fn.expand("%:e")
-   if ext == "py" then
-      vim.cmd("w!")
-      if vim.fn.filereadable("main.py") == 1 then
-         vim.cmd("!python main.py")
-      else
-         vim.cmd("!python %")
-      end
-   elseif ext == "cs" then
-      vim.cmd("w!")
-      vim.cmd("!dotnet build")
-      vim.cmd("!dotnet run")
-   elseif ext == "rs" then
-      vim.cmd("w!")
-      vim.cmd("!cargo run")
-   elseif ext == "lua" then
-      vim.cmd("w")
-      vim.cmd("!lua %")
-   end
-end
-vim.api.nvim_create_user_command("Run", run, {})
-
--- test ----------------------------------------
-local function test_run()
-   local ext = vim.fn.expand("%:e")
-   if ext == "rs" then
-      vim.cmd("w!")
-      vim.cmd("!cargo test")
-   end
-end
-vim.api.nvim_create_user_command("Test", test_run, {})
 
 
 -- copilot chat key bind-------------------------------------

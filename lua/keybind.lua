@@ -48,20 +48,6 @@ local function toggle_fern()
 end
 vim.api.nvim_create_user_command("ToggleFern", toggle_fern, {})
 
--- toggle copilot
-
-local copilot_flag = false
-local function toggle_copilot()
-   if copilot_flag then
-      vim.cmd("Copilot disable")    
-      print("copilot disable")
-      copilot_flag = false
-   else
-      vim.cmd("Copilot enable")    
-      print("copilot enable")
-      copilot_flag = true
-   end
-end
 -- terminal open ----------------------------------------
 local function cmd()
    vim.cmd("split")
@@ -71,14 +57,27 @@ local function cmd()
 end
 vim.api.nvim_create_user_command("Cmd", cmd, {})
 
+-- toggle copilot
 
+-- local copilot_flag = false
+-- local function toggle_copilot()
+--    if copilot_flag then
+--       vim.cmd("Copilot disable")    
+--       print("copilot disable")
+--       copilot_flag = false
+--    else
+--       vim.cmd("Copilot enable")    
+--       print("copilot enable")
+--       copilot_flag = true
+--    end
+-- end
 
 -- copilot chat key bind-------------------------------------
 
-vim.api.nvim_create_user_command("ToggleCopilot", toggle_copilot, {})
-keymap("n","<Leader>C",":ToggleCopilot<CR>",keyopt)
-keymap("n","<Leader>c",":Chat<CR>",keyopt)
-vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化
+-- vim.api.nvim_create_user_command("ToggleCopilot", toggle_copilot, {})
+-- keymap("n","<Leader>C",":ToggleCopilot<CR>",keyopt)
+-- keymap("n","<Leader>c",":Chat<CR>",keyopt)
+-- vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化
 
 ------------------------------------------------
 -- set number hot key ---------------------------
@@ -93,7 +92,7 @@ vim.api.nvim_create_user_command("ToggleNumber", toggle_number, {})
 keymap("n","<Leader>n",":ToggleNumber<CR>",keyopt)
 
 
--- set number- ----------------------------------
+-- set number end----------------------------------
 
 local my_work = os.getenv("MYHOME") 
 local function goto_workspace()
@@ -175,7 +174,7 @@ function CopyDiagnosticsToClipboard()
   if #diagnostics > 0 then
     local message = diagnostics[1].message
     vim.fn.setreg('+', message)  -- クリップボードにコピー
-    print("Diagnostics copied to clipboard: " .. message)
+    print(message)
   else
     print("No diagnostics at current line")
   end

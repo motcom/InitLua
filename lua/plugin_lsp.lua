@@ -15,57 +15,57 @@ require("mason-lspconfig").setup()
 -------------------------------------------------------
 
 -- vim spector の設定 --------------------------------------------------------------------------
-vim.g.vimspector_sidebar_width = 85
-vim.g.vimspector_bottombar_height = 15
-vim.g.vimspector_terminal_maxwidth = 70
+-- vim.g.vimspector_sidebar_width = 85
+-- vim.g.vimspector_bottombar_height = 15
+-- vim.g.vimspector_terminal_maxwidth = 70
 
-vim.api.nvim_set_keymap("n", "<F5>", ":call vimspector#Launch()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<F6>", ":call vimspector#Continue()<CR>", {noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<F7>", ":call vimspector#Stop()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<F8>", ":call vimspector#Reset()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F5>", ":call vimspector#Launch()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F6>", ":call vimspector#Continue()<CR>", {noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F7>", ":call vimspector#Stop()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F8>", ":call vimspector#Reset()<CR>", { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap("n", "<F9>", ":call vimspector#ToggleBreakpoint()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F9>", ":call vimspector#ToggleBreakpoint()<CR>", { noremap = true, silent = true })
 
-vim.api.nvim_set_keymap("n", "<F10>", ":call vimspector#StepOver()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<F11>", ":call vimspector#StepInto()<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<F12>", ":call vimspector#StepOut()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F10>", ":call vimspector#StepOver()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F11>", ":call vimspector#StepInto()<CR>", { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "<F12>", ":call vimspector#StepOut()<CR>", { noremap = true, silent = true })
 
 
 -- VimSpectorLanchFunction ---------------------------
 
-vim.api.nvim_create_user_command("Debug", 
-function()
-    run_setting = require("run_setting")
-    local root_dir     = find_project_root()
-    local project_name = vim.fn.fnamemodify(root_dir,":t")
-    local project_dir  = vim.fn.fnamemodify(root_dir,":h")
-    local file_path  = project_dir .."/".. project_name .. "/" .. ".vimspector.json"
-   local app = project_name .. ".exe"
-   local result = 
-   [[
-   {
-     "configurations": {
-       "launch": {
-         "adapter": "CodeLLDB",
-         "filetypes": [ "rust" ],
-         "configuration": {
-           "request": "launch",
-           "program": "${workspaceRoot}/target/debug/]]..app..[["
-         }
-       }
-     }
-   }
-   ]]
+-- vim.api.nvim_create_user_command("Debug", 
+-- function()
+--     run_setting = require("run_setting")
+--     local root_dir     = find_project_root()
+--     local project_name = vim.fn.fnamemodify(root_dir,":t")
+--     local project_dir  = vim.fn.fnamemodify(root_dir,":h")
+--     local file_path  = project_dir .."/".. project_name .. "/" .. ".vimspector.json"
+--    local app = project_name .. ".exe"
+--    local result = 
+--    [[
+--    {
+--      "configurations": {
+--        "launch": {
+--          "adapter": "CodeLLDB",
+--          "filetypes": [ "rust" ],
+--          "configuration": {
+--            "request": "launch",
+--            "program": "${workspaceRoot}/target/debug/]]..app..[["
+--          }
+--        }
+--      }
+--    }
+--    ]]
 
-    local file = io.open(file_path,"w")
-    if file then
-       file:write(result)
-       file:close()
-       print("File written to: " .. file_path)
-    else
-       print("Error: Could not write to file.")
-    end
-end,{})
+--     local file = io.open(file_path,"w")
+--     if file then
+--        file:write(result)
+--        file:close()
+--        print("File written to: " .. file_path)
+--     else
+--        print("Error: Could not write to file.")
+--     end
+-- end,{})
 
 
 

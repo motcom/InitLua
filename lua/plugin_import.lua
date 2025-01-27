@@ -40,7 +40,6 @@ require("packer").startup(function(use)
       { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
       { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
     },
-    build = "make tiktoken", -- Only on MacOS or Linux
     opts = {
       debug = true, -- Enable debugging
       -- See Configuration section for rest
@@ -78,7 +77,7 @@ require("packer").startup(function(use)
        require("nvim-autopairs").setup {}
      end
    }
-   use "puremourning/vimspector"
+   -- use "puremourning/vimspector"
    use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
 
 end)

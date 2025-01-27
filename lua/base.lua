@@ -43,8 +43,6 @@ vim.g.EasyMotion_smatcase = 1
 vim.diagnostic.config({severity_sort = true})
 
 
-
-
 -- vifmrc filetype
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
     pattern = "vifmrc",
@@ -53,12 +51,6 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
     end,
 })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = "*.rs",
-  callback = function()
-    vim.lsp.buf.format({ async = false })
-  end,
-})
 
 -- フォールディングをexprに設定し、treesitterのfoldexprを使用
 vim.o.foldmethod = "expr"

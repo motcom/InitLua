@@ -3,8 +3,40 @@
 require("packer").startup(function(use)
 
    use "wbthomason/packer.nvim"
+   -- BasicPlugin ----------------------------------
+   use "easymotion/vim-easymotion"
+   use "junegunn/vim-easy-align"
+   use "lambdalisue/fern.vim"
+   use "ellisonleao/gruvbox.nvim"
+   use "simeji/winresizer"
+   use "tpope/vim-commentary"
+   use "tpope/vim-surround"
+   use {
+     'wfxr/minimap.vim',
+     as = 'minimap',
+   }
+
+   -- 整形------------------------------------------
+   use "mechatroner/rainbow_csv"
+   -- markdown preview
+   use({
+     'iamcco/markdown-preview.nvim',
+     run = function() vim.fn['mkdp#util#install']() end
+   })
+   use "aklt/plantuml-syntax"
+   use "weirongxu/plantuml-previewer.vim"
+   use "folke/zen-mode.nvim"
+   use {
+     "windwp/nvim-autopairs",
+     config = function()
+       require("nvim-autopairs").setup {}
+     end
+   }
+   use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
+   use "norcalli/nvim-colorizer.lua"
+
+   -- LSP関連プラグイン ---------------------------------------
    use "neovim/nvim-lspconfig"
-   -- LSP関連プラグイン
    use 'williamboman/mason.nvim'
    -- masonとlspconfigの連携
    use 'williamboman/mason-lspconfig.nvim' 
@@ -16,6 +48,7 @@ require("packer").startup(function(use)
 
    use "hrsh7th/nvim-cmp" -- 補完エンジン
    use "hrsh7th/cmp-nvim-lsp" -- LSP補完の連携
+   use "hrsh7th/cmp-buffer" -- LSP補完の連携
    use "hrsh7th/cmp-path" -- ファイルパス補完
    use {
        "zbirenbaum/copilot.lua",
@@ -28,12 +61,14 @@ require("packer").startup(function(use)
          })
        end,
     }
+
    use {
      "zbirenbaum/copilot-cmp",
      config = function ()
        require("copilot_cmp").setup()
      end
    }
+
   use {
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
@@ -46,38 +81,7 @@ require("packer").startup(function(use)
     },
     -- See Commands section for default commands if you want to lazy load on them
   }
-   use "easymotion/vim-easymotion"
-   use "junegunn/vim-easy-align"
-   use "lambdalisue/fern.vim"
-   use "ellisonleao/gruvbox.nvim"
-   use "simeji/winresizer"
-   use "tpope/vim-commentary"
-   use "tpope/vim-surround"
-   use "mechatroner/rainbow_csv"
-   -- markdown preview
-   use({
-     'iamcco/markdown-preview.nvim',
-     run = function() vim.fn['mkdp#util#install']() end
-   })
-   use "aklt/plantuml-syntax"
-   use "weirongxu/plantuml-previewer.vim"
-   
-   -- markdown preview 
 
-   use "norcalli/nvim-colorizer.lua"
-   use "folke/zen-mode.nvim"
-   use "tell-k/vim-autopep8"
-   use {
-     'wfxr/minimap.vim',
-     as = 'minimap',
-   }
-   use {
-     "windwp/nvim-autopairs",
-     config = function()
-       require("nvim-autopairs").setup {}
-     end
-   }
-   -- use "puremourning/vimspector"
-   use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
+   
 
 end)

@@ -1,7 +1,6 @@
 
 local keymap    = vim.api.nvim_set_keymap
 local keyopt    = { noremap = true, silent = true }
-
 ---------------------------------- Build Start -------------------------------------------
 local function build()
    local ext = vim.fn.expand("%:e")

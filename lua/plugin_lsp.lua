@@ -13,63 +13,6 @@ require("mason").setup({
 )
 require("mason-lspconfig").setup()
 -------------------------------------------------------
-
--- vim spector の設定 --------------------------------------------------------------------------
--- vim.g.vimspector_sidebar_width = 85
--- vim.g.vimspector_bottombar_height = 15
--- vim.g.vimspector_terminal_maxwidth = 70
-
--- vim.api.nvim_set_keymap("n", "<F5>", ":call vimspector#Launch()<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F6>", ":call vimspector#Continue()<CR>", {noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F7>", ":call vimspector#Stop()<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F8>", ":call vimspector#Reset()<CR>", { noremap = true, silent = true })
-
--- vim.api.nvim_set_keymap("n", "<F9>", ":call vimspector#ToggleBreakpoint()<CR>", { noremap = true, silent = true })
-
--- vim.api.nvim_set_keymap("n", "<F10>", ":call vimspector#StepOver()<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F11>", ":call vimspector#StepInto()<CR>", { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "<F12>", ":call vimspector#StepOut()<CR>", { noremap = true, silent = true })
-
-
--- VimSpectorLanchFunction ---------------------------
-
--- vim.api.nvim_create_user_command("Debug", 
--- function()
---     run_setting = require("run_setting")
---     local root_dir     = find_project_root()
---     local project_name = vim.fn.fnamemodify(root_dir,":t")
---     local project_dir  = vim.fn.fnamemodify(root_dir,":h")
---     local file_path  = project_dir .."/".. project_name .. "/" .. ".vimspector.json"
---    local app = project_name .. ".exe"
---    local result = 
---    [[
---    {
---      "configurations": {
---        "launch": {
---          "adapter": "CodeLLDB",
---          "filetypes": [ "rust" ],
---          "configuration": {
---            "request": "launch",
---            "program": "${workspaceRoot}/target/debug/]]..app..[["
---          }
---        }
---      }
---    }
---    ]]
-
---     local file = io.open(file_path,"w")
---     if file then
---        file:write(result)
---        file:close()
---        print("File written to: " .. file_path)
---     else
---        print("Error: Could not write to file.")
---     end
--- end,{})
-
-
-
-
 -- LSPの設定
 local lspconfig = require("lspconfig")
 require('lspconfig').pyright.setup{
@@ -78,6 +21,7 @@ require('lspconfig').pyright.setup{
     local opts = { noremap=true, silent=true, buffer=bufnr }
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)       -- ホバー表示
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts) -- リファレンスジャンプ
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts) -- リネーム
   end,
   flags = {
@@ -104,10 +48,6 @@ rt.setup({
       vim.api.nvim_buf_set_option(bufnr,"shiftwidth",3)
       vim.api.nvim_buf_set_option(bufnr,"tabstop",3)
       vim.api.nvim_buf_set_option(bufnr,"softtabstop",3)
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-      vim.api.nvim_buf_set_keymap(bufnr, "n", "<Leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
     end,
   },
   tools = {
@@ -137,32 +77,24 @@ rt.setup({
 
 
 -- nvim-cmpの設定 ----------------------------------------
-local cmp = require("cmp")
 local luasnip = require("luasnip")
-
--- 下記cmp_setupで使用
-local has_words_before = function()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
-end
+local cmp = require("cmp")
 
 cmp.setup({
-
   window = {
     documentation = {
       max_height = 15,
       max_width = 60,
     },
   },
-  snnipet = {
+  snippet = {
       expand = function(args)
          luasnip.lsp_expand(args.body)
       end,
    },
   mapping = {
-      -- <C-y>でドキュメントをクリップボードにコピー
     ['<C-y>'] = cmp.mapping(function(fallback)
+      -- <C-y>でドキュメントをクリップボードにコピー
       local entry = cmp.get_selected_entry()
       if entry then
         local completion_item = entry:get_completion_item()
@@ -185,10 +117,10 @@ cmp.setup({
     ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
     ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
     ["<Tab>"] = vim.schedule_wrap(function(fallback)
-      if cmp.visible() and has_words_before() then
-        cmp.confirm({select = true})
+      if cmp.visible() then
+         cmp.confirm({select = true})
       else
-        fallback()
+         fallback()
       end
     end),
   },

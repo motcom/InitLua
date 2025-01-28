@@ -162,3 +162,24 @@ function CopyDiagnosticsToClipboard()
   end
 end
 
+-- toggle copilot ---------------------------------------------------
+
+local copilot_flag = false
+local function toggle_copilot()
+   if copilot_flag then
+      vim.cmd("Copilot disable")    
+      print("copilot disable")
+      copilot_flag = false
+   else
+      vim.cmd("Copilot enable")    
+      print("copilot enable")
+      copilot_flag = true
+   end
+end
+
+-- copilot chat key bind-------------------------------------
+
+vim.api.nvim_create_user_command("ToggleCopilot", toggle_copilot, {})
+keymap("n","<Leader>C",":ToggleCopilot<CR>",keyopt)
+keymap("n","<Leader>c",":Chat<CR>",keyopt)
+vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化

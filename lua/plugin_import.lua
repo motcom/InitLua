@@ -50,36 +50,37 @@ require("packer").startup(function(use)
    use "hrsh7th/cmp-nvim-lsp" -- LSP補完の連携
    use "hrsh7th/cmp-buffer" -- LSP補完の連携
    use "hrsh7th/cmp-path" -- ファイルパス補完
-   use {
-       "zbirenbaum/copilot.lua",
-       cmd = "Copilot",
-       config = function()
-         require("copilot").setup({
-           suggestion = { enabled = false },
-           panel = { enabled = false },
-           copilot_node_command = 'node'
-         })
-       end,
-    }
 
-   use {
-     "zbirenbaum/copilot-cmp",
-     config = function ()
-       require("copilot_cmp").setup()
-     end
-   }
-
-  use {
-    "CopilotC-Nvim/CopilotChat.nvim",
-    dependencies = {
-      { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
-      { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
-    },
-    opts = {
-      debug = true, -- Enable debugging
-      -- See Configuration section for rest
-    },
-    -- See Commands section for default commands if you want to lazy load on them
-  }
    use "puremourning/vimspector"
+   -- use {
+   --     "zbirenbaum/copilot.lua",
+   --     cmd = "Copilot",
+   --     config = function()
+   --       require("copilot").setup({
+   --         suggestion = { enabled = false },
+   --         panel = { enabled = false },
+   --         copilot_node_command = 'node'
+   --       })
+   --     end,
+   --  }
+
+   -- use {
+   --   "zbirenbaum/copilot-cmp",
+   --   config = function ()
+   --     require("copilot_cmp").setup()
+   --   end
+   -- }
+
+   -- use {
+   --   "CopilotC-Nvim/CopilotChat.nvim",
+   --   dependencies = {
+   --     { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
+   --     { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
+   --   },
+   --   opts = {
+   --     debug = true, -- Enable debugging
+   --     -- See Configuration section for rest
+   --   },
+   --   -- See Commands section for default commands if you want to lazy load on them
+   -- }
 end)

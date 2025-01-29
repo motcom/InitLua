@@ -44,6 +44,10 @@ rt.setup({
   server = {
     on_attach = function(client, bufnr)
       local opts = { noremap=true, silent=true }
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
+      vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)       -- ホバー表示
+      vim.keymap.set("n", "gr", vim.lsp.buf.references, opts) -- リファレンスジャンプ
+      vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts) -- リネーム
 
       vim.api.nvim_buf_set_option(bufnr,"shiftwidth",3)
       vim.api.nvim_buf_set_option(bufnr,"tabstop",3)

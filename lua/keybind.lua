@@ -17,6 +17,9 @@ keymap("n", "ga", "<Plug>(EasyAlign)", keyopt)
 keymap("x", "ga", "<Plug>(EasyAlign)", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 
+keymap("n","<C-n>" ,":cnext<CR>", keyopt)
+keymap("n","<C-N>" ,":cnext<CR>", keyopt)
+
 -- window move
 keymap("n","<leader>h","<C-w>h",keyopt)
 keymap("n","<leader>j","<C-w>j",keyopt)
@@ -25,8 +28,8 @@ keymap("n","<leader>l","<C-w>l",keyopt)
 
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
-keymap("i", ";;", "<ESC>$A;<CR>", keyopt)
-keymap("i", ",,", "<ESC>$A,<CR>", keyopt)
+keymap("i", ";;", "<ESC>$A;<ESC>", keyopt)
+keymap("i", ",,", "<ESC>$A,<ESC>", keyopt)
 keymap("i", "<C-l>", "<ESC>$A", keyopt)
 
 -- terminal

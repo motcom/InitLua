@@ -36,12 +36,20 @@ vim.cmd("syntax enable")
 vim.cmd.colorscheme "gruvbox"
 
 -- value setting
-local my_python = os.getenv("MYPYTHON")
-vim.g.python3_host_prog = my_python
+local my_python           = os.getenv("MYPYTHON")
+vim.g.python3_host_prog   = my_python
 vim.g.EasyMotion_smatcase = 1
 
 vim.diagnostic.config({severity_sort = true})
 
+-- easy allign setting
+vim.g.easy_align_delimiters = {
+   ['--']={
+      pattern = '[--=]',
+      left_margin = 1,
+      right_margin = 1,
+   }
+}
 
 -- vifmrc filetype
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {

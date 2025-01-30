@@ -17,8 +17,8 @@ keymap("n", "ga", "<Plug>(EasyAlign)", keyopt)
 keymap("x", "ga", "<Plug>(EasyAlign)", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 
-keymap("n","<C-n>" ,":cnext<CR>", keyopt)
-keymap("n","<C-N>" ,":cnext<CR>", keyopt)
+keymap("n", "<C-n>", ":cnext<CR>", keyopt)
+keymap("n", "<C-p>", ":cprev<CR>", keyopt)
 
 -- window move
 keymap("n","<leader>h","<C-w>h",keyopt)
@@ -36,8 +36,8 @@ keymap("i", "<C-l>", "<ESC>$A", keyopt)
 keymap("t", "<ESC>", "<C-\\><C-n>", keyopt)
 keymap("t", "<C-e>", "<C-\\><C-n>:WinResizerStartResize<CR>", keyopt)
 
-keymap("n", "<C-c>", ":Cmd<CR>", keyopt)
-keymap("t", "<C-c>", "<C-\\><C-n>:q<CR>", keyopt)
+keymap("n", "<C-t>", ":Cmd<CR>", keyopt)
+keymap("t", "<C-t>", "<C-\\><C-n>:q<CR>", keyopt)
 
 -- MiniMap toggle
 keymap("n", "<Leader>m", ":MinimapToggle<CR>", keyopt)
@@ -66,10 +66,7 @@ local function cmd()
 end
 vim.api.nvim_create_user_command("Cmd", cmd, {})
 
--- copilot chat key bind-------------------------------------
 
-keymap("n","<Leader>c",":Chat<CR>",keyopt)
--- vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化
 
 ------------------------------------------------
 -- set number hot key ---------------------------
@@ -171,24 +168,3 @@ function CopyDiagnosticsToClipboard()
   end
 end
 
--- toggle copilot ---------------------------------------------------
-
--- local copilot_flag = false
--- local function toggle_copilot()
---    if copilot_flag then
---       vim.cmd("Copilot disable")    
---       print("copilot disable")
---       copilot_flag = false
---    else
---       vim.cmd("Copilot enable")    
---       print("copilot enable")
---       copilot_flag = true
---    end
--- end
-
--- copilot chat key bind-------------------------------------
-
--- vim.api.nvim_create_user_command("ToggleCopilot", toggle_copilot, {})
--- -- keymap("n","<Leader>C",":ToggleCopilot<CR>",keyopt)
--- -- keymap("n","<Leader>c",":Chat<CR>",keyopt)
--- vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化

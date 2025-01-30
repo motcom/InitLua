@@ -17,18 +17,27 @@ keymap("n", "ga", "<Plug>(EasyAlign)", keyopt)
 keymap("x", "ga", "<Plug>(EasyAlign)", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 
+keymap("n", "<C-n>", ":cnext<CR>", keyopt)
+keymap("n", "<C-p>", ":cprev<CR>", keyopt)
+
+-- window move
+keymap("n","<leader>h","<C-w>h",keyopt)
+keymap("n","<leader>j","<C-w>j",keyopt)
+keymap("n","<leader>k","<C-w>k",keyopt)
+keymap("n","<leader>l","<C-w>l",keyopt)
+
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
-keymap("i", ";;", "<ESC>$A;<CR>", keyopt)
-keymap("i", ",,", "<ESC>$A,<CR>", keyopt)
+keymap("i", ";;", "<ESC>$A;", keyopt)
+keymap("i", ",,", "<ESC>$A,", keyopt)
 keymap("i", "<C-l>", "<ESC>$A", keyopt)
 
 -- terminal
 keymap("t", "<ESC>", "<C-\\><C-n>", keyopt)
 keymap("t", "<C-e>", "<C-\\><C-n>:WinResizerStartResize<CR>", keyopt)
 
-keymap("n", "<C-c>", ":Cmd<CR>", keyopt)
-keymap("t", "<C-c>", "<C-\\><C-n>:q<CR>", keyopt)
+keymap("n", "<C-t>", ":Cmd<CR>", keyopt)
+keymap("t", "<C-t>", "<C-\\><C-n>:q<CR>", keyopt)
 
 -- MiniMap toggle
 keymap("n", "<Leader>m", ":MinimapToggle<CR>", keyopt)
@@ -57,10 +66,7 @@ local function cmd()
 end
 vim.api.nvim_create_user_command("Cmd", cmd, {})
 
--- copilot chat key bind-------------------------------------
 
-keymap("n","<Leader>c",":Chat<CR>",keyopt)
-vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化
 
 ------------------------------------------------
 -- set number hot key ---------------------------
@@ -76,13 +82,13 @@ keymap("n","<Leader>n",":ToggleNumber<CR>",keyopt)
 
 -- set number end----------------------------------
 
-local my_work = os.getenv("MYHOME") 
+local my_work = os.getenv("MYWORK") 
 local function goto_workspace()
    vim.cmd("cd " .. my_work)
    print("cd " .. my_work)
 end
-vim.api.nvim_create_user_command("MyHome", goto_workspace, {})
-keymap("n","<Leader>h",":MyHome<CR>",keyopt)
+vim.api.nvim_create_user_command("MyWork", goto_workspace, {})
+keymap("n","<Leader>w",":MyWork<CR>",keyopt)
 
 
 local my_tmp = os.getenv("MYTMP") 
@@ -162,24 +168,3 @@ function CopyDiagnosticsToClipboard()
   end
 end
 
--- toggle copilot ---------------------------------------------------
-
-local copilot_flag = false
-local function toggle_copilot()
-   if copilot_flag then
-      vim.cmd("Copilot disable")    
-      print("copilot disable")
-      copilot_flag = false
-   else
-      vim.cmd("Copilot enable")    
-      print("copilot enable")
-      copilot_flag = true
-   end
-end
-
--- copilot chat key bind-------------------------------------
-
-vim.api.nvim_create_user_command("ToggleCopilot", toggle_copilot, {})
-keymap("n","<Leader>C",":ToggleCopilot<CR>",keyopt)
-keymap("n","<Leader>c",":Chat<CR>",keyopt)
-vim.g.copilot_enabled = false -- Copilotをデフォルトで無効化

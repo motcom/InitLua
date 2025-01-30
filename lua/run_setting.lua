@@ -41,7 +41,6 @@ local function test_run()
       vim.cmd("!cargo test")
    end
 end
-
 vim.api.nvim_create_user_command("Test", test_run, {})
 -------------------------------- Test End ---------------------------------------------
 

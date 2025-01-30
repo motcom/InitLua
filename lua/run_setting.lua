@@ -31,11 +31,9 @@ local function run()
    end
 end
 vim.api.nvim_create_user_command("Run", run, {})
-keymap("n", "<Leader>r", ":Run<CR>", keyopt)
 -------------------------------- Run Setting End ----------------------------------------
 
 -------------------------------- Test Start ---------------------------------------------
-keymap("n", "<Leader>t", ":TestRun<CR>", keyopt)
 local function test_run()
    local ext = vim.fn.expand("%:e")
    if ext == "rs" then

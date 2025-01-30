@@ -3,10 +3,9 @@
 require("mason").setup({
    ui = {
       icons = {
-         package_installed = "",
-         package_pending = "",
+         package_installed   = "",
+         package_pending     = "",
          package_uninstalled = "",
-
       },
    }
 }
@@ -22,7 +21,7 @@ require('lspconfig').pyright.setup{
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)       -- ホバー表示
     vim.keymap.set("n", "gr", vim.lsp.buf.references, opts) -- リファレンスジャンプ
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts) -- リネーム
+    vim.keymap.set('n', 'gn', vim.lsp.buf.rename, opts) -- リネーム
   end,
   flags = {
     debounce_text_changes = 150, -- テキスト変更後の更新待機時間
@@ -30,8 +29,8 @@ require('lspconfig').pyright.setup{
   settings = {
     python = {
       analysis = {
-        typeCheckingMode = "basic", -- 型チェックの厳密さ ("off", "basic", "strict")
-        autoSearchPaths = true,     -- パスを自動検索
+              typeCheckingMode = "basic", -- 型チェックの厳密さ ("off", "basic", "strict")
+               autoSearchPaths = true,     -- パスを自動検索
         useLibraryCodeForTypes = true, -- ライブラリコードの型情報を使用
       },
     },
@@ -43,8 +42,13 @@ local rt = require("rust-tools")
 rt.setup({
   server = {
     on_attach = function(client, bufnr)
-      local opts = { noremap=true, silent=true }
-
+      
+      local opts = { noremap = true, silent = true, buffer = bufnr } -- LSP 関連のキーマッピング
+     
+      vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
+      vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts) -- リファレンスジャンプ
+      vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts) -- リネーム
+      vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts) -- ホバー表示
       vim.api.nvim_buf_set_option(bufnr,"shiftwidth",3)
       vim.api.nvim_buf_set_option(bufnr,"tabstop",3)
       vim.api.nvim_buf_set_option(bufnr,"softtabstop",3)
@@ -117,7 +121,7 @@ cmp.setup({
     ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
     ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
     ["<Tab>"] = vim.schedule_wrap(function(fallback)
-      if cmp.visible() then
+     if cmp.visible() then
          cmp.confirm({select = true})
       else
          fallback()

@@ -1,5 +1,7 @@
 
+local opts = { noremap=true, silent=true }
 --  mason setting -------------------------------------
+
 require("mason").setup({
    ui = {
       icons = {
@@ -14,10 +16,10 @@ require("mason-lspconfig").setup()
 -------------------------------------------------------
 -- LSPの設定
 local lspconfig = require("lspconfig")
-require('lspconfig').pyright.setup{
+local capabilities = require'cmp_nvim_lsp'.default_capabilities()
+lspconfig.pyright.setup{
   on_attach = function(client, bufnr)
     -- キーバインドや設定をLSPにアタッチしたときにカスタマイズ
-    local opts = { noremap=true, silent=true, buffer=bufnr }
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)       -- ホバー表示
     vim.keymap.set("n", "gr", vim.lsp.buf.references, opts) -- リファレンスジャンプ
@@ -37,12 +39,61 @@ require('lspconfig').pyright.setup{
   },
 }
 
+lspconfig.lua_ls.setup {
+  settings = {
+    Lua = {
+      runtime = { version = 'LuaJIT' },
+      diagnostics = { globals = { 'vim' } },
+      workspace = {
+        library = vim.api.nvim_get_runtime_file("", true),
+        checkThirdParty = false,
+      },
+      telemetry = { enable = false },
+    },
+  },
+  capabilities = capabilities,
+}
+
+lspconfig.html.setup {
+  capabilities = capabilities,
+  filetypes = { "html", "htmldjango" },
+  on_attach = function(client,bufnr)
+    client.server_capabilities.documentFormattingProvider = true
+    
+  end,
+  settings = {
+    html = {
+      format = {
+        enable = true
+      },
+      hover = {
+        documentation = true,
+        references = true
+      }
+    }
+  }
+}
+
+
+
+-- CSS LSP 設定
+lspconfig.cssls.setup {
+  capabilities = capabilities,
+  filetypes = { "css", "scss", "less" },
+}
+
+-- JavaScript (tsserver) LSP 設定
+lspconfig.ts_ls.setup {
+  capabilities = capabilities,
+  filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  cmd = { "typescript-language-server", "--stdio" },
+}
+
 -- rust tool rustanalyzer manager
 local rt = require("rust-tools")
 rt.setup({
   server = {
     on_attach = function(client, bufnr)
-      local opts = { noremap=true, silent=true }
       vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
       vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)       -- ホバー表示
       vim.keymap.set("n", "gr", vim.lsp.buf.references, opts) -- リファレンスジャンプ
@@ -80,9 +131,8 @@ rt.setup({
 
 
 -- nvim-cmpの設定 ----------------------------------------
-local luasnip = require("luasnip")
 local cmp = require("cmp")
-
+local luasnip = require("LuaSnip")
 cmp.setup({
   window = {
     documentation = {
@@ -119,6 +169,7 @@ cmp.setup({
     ["<C-Space>"] = cmp.mapping.complete(),
     ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
     ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
+    ['<C-e>'] = cmp.mapping.abort(),
     ["<Tab>"] = vim.schedule_wrap(function(fallback)
      if cmp.visible() then
          cmp.confirm({select = true})
@@ -130,7 +181,6 @@ cmp.setup({
   sources = cmp.config.sources({
     { name = "nvim_lsp" }, -- LSPからの補完
     { name = "path" },     -- ファイルパス補完
-    { name = "copilot" },  -- Copilot補完
   }),
 })
 

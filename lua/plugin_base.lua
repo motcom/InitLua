@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
 })
 
 -- easy allign setting
-vim.g.easy_align_ignore_groups = { 
+vim.g.easy_align_ignore_groups = {
     ["-"] = { pattern = "-\\{2,}" }
 }
 
@@ -95,4 +95,17 @@ vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = 'Telescope diagn
 vim.keymap.set('n', '<leader>fc', builtin.current_buffer_fuzzy_find, { desc = 'Telescope live grep current buffer' })
 vim.keymap.set('n', '<leader>fm', builtin.lsp_document_symbols, { desc = 'Telescope method find' })
 vim.keymap.set('n', '<leader>ft', builtin.treesitter, { desc = 'Telescope treesitter' })
+
+
+-- live server
+
+vim.api.nvim_create_user_command("LiveServer", function()
+  -- Neovim のターミナルを開き、live-server を実行
+  vim.cmd("split | terminal live-server")
+  -- 少し待ってからターミナルを閉じる（非同期で処理）
+  vim.defer_fn(function()
+    vim.cmd("q")  -- ターミナルウィンドウを閉じる
+  end, 1000) -- 1秒 (1000ミリ秒) 待機してから閉じる
+end, {})
+vim.keymap.set('n', "<leader>p",":LiveServer<CR>",{ noremap = true, silent = true } )
 

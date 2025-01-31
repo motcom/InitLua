@@ -30,7 +30,6 @@ keymap("n","<leader>l","<C-w>l",keyopt)
 keymap("i", "jj", "<ESC>", keyopt)
 keymap("i", ";;", "<ESC>$A;<ESC>", keyopt)
 keymap("i", ",,", "<ESC>$A,<ESC>", keyopt)
-keymap("i", "<C-l>", "<ESC>$A", keyopt)
 
 -- terminal
 keymap("t", "<ESC>", "<C-\\><C-n>", keyopt)
@@ -148,7 +147,6 @@ vim.api.nvim_create_user_command('TreeLib', function()
     vim.cmd('terminal cargo-modules structure --lib')
     vim.cmd('startinsert')
 end, {})
-
 vim.api.nvim_create_user_command('Tree', function()
     vim.cmd('botright new')
     vim.cmd('terminal cargo_modules_binary')
@@ -167,4 +165,10 @@ function CopyDiagnosticsToClipboard()
     print("No diagnostics at current line")
   end
 end
+
+-- Format
+
+vim.api.nvim_create_user_command('Fmt', function()
+    vim.lsp.buf.format()
+end, {})
 

@@ -42,12 +42,15 @@ require("packer").startup(function(use)
 
    -- Snipet
    use "L3MON4D3/LuaSnip"
+   use "saadparwaiz1/cmp_luasnip"
 
    -- 補完関係
    use "hrsh7th/nvim-cmp" -- 補完エンジン
    use "hrsh7th/cmp-nvim-lsp" -- LSP補完の連携
    use "hrsh7th/cmp-buffer" -- LSP補完の連携
    use "hrsh7th/cmp-path" -- ファイルパス補完
+   use "hrsh7th/cmp-cmdline"
+
    use {
      'nvim-telescope/telescope.nvim', tag = '0.1.8',
      requires = { {'nvim-lua/plenary.nvim'} }

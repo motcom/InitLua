@@ -76,6 +76,7 @@ lspconfig.html.setup {
 
 
 
+
 -- CSS LSP 設定
 lspconfig.cssls.setup {
   capabilities = capabilities,
@@ -87,6 +88,7 @@ lspconfig.ts_ls.setup {
   capabilities = capabilities,
   filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
   cmd = { "typescript-language-server", "--stdio" },
+
 }
 
 -- rust tool rustanalyzer manager

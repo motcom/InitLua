@@ -5,8 +5,6 @@ require("packer").startup(function(use)
    -- plugin 管理
    use "wbthomason/packer.nvim"
 
-   -- Color Theme
-   use "ellisonleao/gruvbox.nvim"
    -- BasicPlugin ----------------------------------
    use "easymotion/vim-easymotion"
    use "junegunn/vim-easy-align"
@@ -55,4 +53,5 @@ require("packer").startup(function(use)
      'nvim-telescope/telescope.nvim', tag = '0.1.8',
      requires = { {'nvim-lua/plenary.nvim'} }
    }
+
 end)

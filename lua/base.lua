@@ -34,6 +34,7 @@ op.fileencoding = "utf-8"
 -- syntax on
 vim.cmd("syntax enable")
 vim.cmd.colorscheme "gruvbox"
+-- vim.cmd.colorscheme "vague"
 
 -- value setting
 local my_python           = os.getenv("MYPYTHON")
@@ -60,7 +61,3 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
 })
 
 
--- フォールディングをexprに設定し、treesitterのfoldexprを使用
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-vim.o.foldenable = false -- デフォルトでフォールドを開いた状態にする

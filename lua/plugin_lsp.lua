@@ -2,6 +2,7 @@
 local opts = { noremap=true, silent=true }
 --  mason setting -------------------------------------
 
+---@diagnostic disable-next-line:undefined-field
 require("mason").setup({
    ui = {
       icons = {

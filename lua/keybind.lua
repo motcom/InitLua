@@ -35,8 +35,8 @@ keymap("i", ",,", "<ESC>$A,<ESC>", keyopt)
 keymap("t", "<ESC>", "<C-\\><C-n>", keyopt)
 keymap("t", "<C-e>", "<C-\\><C-n>:WinResizerStartResize<CR>", keyopt)
 
-keymap("n", "<C-t>", ":Cmd<CR>", keyopt)
-keymap("t", "<C-t>", "<C-\\><C-n>:q<CR>", keyopt)
+keymap("n", "<C-c>", ":Cmd<CR>", keyopt)
+keymap("t", "<C-c>", "<C-\\><C-n>:q<CR>", keyopt)
 
 -- MiniMap toggle
 keymap("n", "<Leader>m", ":MinimapToggle<CR>", keyopt)
@@ -65,8 +65,6 @@ local function cmd()
 end
 vim.api.nvim_create_user_command("Cmd", cmd, {})
 
-
-
 ------------------------------------------------
 -- set number hot key ---------------------------
 local function toggle_number()
@@ -81,7 +79,7 @@ keymap("n","<Leader>n",":ToggleNumber<CR>",keyopt)
 
 -- set number end----------------------------------
 
-local my_work = os.getenv("MYWORK") 
+local my_work = os.getenv("MYWORK")
 local function goto_workspace()
    vim.cmd("cd " .. my_work)
    print("cd " .. my_work)
@@ -90,7 +88,7 @@ vim.api.nvim_create_user_command("MyWork", goto_workspace, {})
 keymap("n","<Leader>w",":MyWork<CR>",keyopt)
 
 
-local my_tmp = os.getenv("MYTMP") 
+local my_tmp = os.getenv("MYTMP")
 local function goto_tmp()
    vim.cmd("cd " .. my_tmp)
    vim.cmd("w! tmp.py")

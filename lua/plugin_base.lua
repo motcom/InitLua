@@ -45,6 +45,10 @@ vim.cmd [[
 ]]
 
 require('nvim-treesitter.configs').setup {
+   modules = {},
+   sync_install=false,
+   ignore_install={},
+   auto_install =true,
    ensure_installed = {"lua","python","toml","json",
       "rust","markdown"},
    indent = {
@@ -86,6 +90,14 @@ zen_mode.setup({
 })
 
 -- Telescope Seting
+require("telescope").setup({
+   defaults = {
+      initial_mode = "normal"
+   }
+})
+
+
+
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
@@ -98,7 +110,6 @@ vim.keymap.set('n', '<leader>ft', builtin.treesitter, { desc = 'Telescope treesi
 
 
 -- live server
-
 vim.api.nvim_create_user_command("LiveServer", function()
   -- Neovim のターミナルを開き、live-server を実行
   vim.cmd("split | terminal live-server")
@@ -109,3 +120,7 @@ vim.api.nvim_create_user_command("LiveServer", function()
 end, {})
 vim.keymap.set('n', "<leader>p",":LiveServer<CR>",{ noremap = true, silent = true } )
 
+-- フォールディングをexprに設定し、treesitterのfoldexprを使用
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+vim.o.foldenable = false -- デフォルトでフォールドを開いた状態にする

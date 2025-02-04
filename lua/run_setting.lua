@@ -32,6 +32,40 @@ local function run()
 end
 vim.api.nvim_create_user_command("Run", run, {})
 -------------------------------- Run Setting End ----------------------------------------
+-- PhotoshopScript Run
+local function photoshop_run()
+   local ram_dsk = os.getenv("MYTMP")
+   if ram_dsk == nil then
+      print("ラムディスク取得できません")
+      return
+   end
+   local ram_dsk_file = ram_dsk .. [[\tmp_ps_script.js]]
+   print(ram_dsk_file)
+   local current_file = vim.fn.expand("%:p")
+   current_file = current_file:gsub("\\","\\\\")
+   local script_str = [[
+// Photoshop の COM オブジェクトを作成
+var photoshop = new ActiveXObject("Photoshop.Application");
+
+// 実行する JSX スクリプトのパス
+var scriptPath = "]].. current_file ..[[";
+
+// JSX を Photoshop に送る
+photoshop.DoJavaScriptFile(scriptPath);
+]]
+   local fp = io.open(ram_dsk_file,"w")
+   if fp then
+      fp:write(script_str)
+      fp:close()
+   else
+      print("file write error")
+   end
+   print("ok_c")
+   local command = '!cscript //E:JScript ' ..  ram_dsk_file
+   print(command)
+   vim.cmd(command)
+end
+vim.api.nvim_create_user_command("Runp",photoshop_run,{})
 
 -------------------------------- Test Start ---------------------------------------------
 local function test_run()
@@ -46,7 +80,7 @@ vim.api.nvim_create_user_command("Test", test_run, {})
 
 --------------------------------- Python Runm Setting Start-------------------------------------
 -- プロジェクトのルートディレクトリを特定する関数
-function find_project_root()
+local function find_project_root()
     -- 探索対象のルート判定ファイル/ディレクトリ
     local markers = { ".git", "pyproject.toml", "setup.py", "main.py" }
     -- カレントディレクトリから上に探索
@@ -75,10 +109,9 @@ local python_command = "python"
 -- 実行コマンドを定義する関数
 local function create_run_command()
     local root_dir = find_project_root()
-    local project_name = vim.fn.fnamemodify(root_dir,":t")
-    local project_dir  = vim.fn.fnamemodify(root_dir,":h")
-    
     if root_dir then
+        local project_name = vim.fn.fnamemodify(root_dir,":t")
+        local project_dir  = vim.fn.fnamemodify(root_dir,":h")
         return string.format("cd %s && %s -m %s.main", project_dir, python_command, project_name )
     else
         error("Project root not found!")

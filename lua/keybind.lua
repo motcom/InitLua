@@ -98,7 +98,6 @@ vim.api.nvim_create_user_command("MyTmp", goto_tmp, {})
 
 
 -- my function ----------------------------------
-
 local function yankMatchingLines()
    -- 最後の検索パターンを取得
    local pattern = vim.fn.histget('search', -1)
@@ -132,14 +131,12 @@ local function clearAllYankBuffers()
    local regs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-\""
    for i = 1, #regs do
       local reg = regs:sub(i, i)
-      vim.fn.setreg(reg, {})
+      vim.fn.setreg(reg, "")
    end
 end
 vim.api.nvim_create_user_command("ClearBuf", clearAllYankBuffers, {})
 
-
 -- Cargo modules Tree viewer -----------------------------------
-
 vim.api.nvim_create_user_command('TreeLib', function()
     vim.cmd('botright new')
     vim.cmd('terminal cargo-modules structure --lib')
@@ -165,7 +162,6 @@ function CopyDiagnosticsToClipboard()
 end
 
 -- Format
-
 vim.api.nvim_create_user_command('Fmt', function()
     vim.lsp.buf.format()
 end, {})

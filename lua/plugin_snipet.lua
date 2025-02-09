@@ -10,8 +10,8 @@ vim.api.nvim_set_keymap("i", "<C-j>", "<cmd>lua require'luasnip'.jump(-1)<CR>", 
 -- Snpet Data Start --------------------------------------------------
 luasnip.add_snippets("html", {
   s("html5", {
-    t({"<!DOCTYPE html>", "<html>", "<head>", "  <title>"}), 
-    i(1, "title"), 
+    t({"<!DOCTYPE html>", "<html>", "<head>", "  <title>"}),
+    i(1, "title"),
     t({"</title>", "</head>", "<body>", "  "}),
     i(2, "content"),
     t({"", "</body>", "</html>"})

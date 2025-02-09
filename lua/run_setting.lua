@@ -40,7 +40,6 @@ local function photoshop_run()
       return
    end
    local ram_dsk_file = ram_dsk .. [[\tmp_ps_script.js]]
-   print(ram_dsk_file)
    local current_file = vim.fn.expand("%:p")
    current_file = current_file:gsub("\\","\\\\")
    local script_str = [[
@@ -60,9 +59,7 @@ photoshop.DoJavaScriptFile(scriptPath);
    else
       print("file write error")
    end
-   print("ok_c")
    local command = '!cscript //E:JScript ' ..  ram_dsk_file
-   print(command)
    vim.cmd(command)
 end
 vim.api.nvim_create_user_command("Runp",photoshop_run,{})

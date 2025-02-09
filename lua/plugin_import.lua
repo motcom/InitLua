@@ -9,6 +9,7 @@ require("packer").startup(function(use)
    use "easymotion/vim-easymotion"
    use "junegunn/vim-easy-align"
    use "lambdalisue/fern.vim"
+   use "lambdalisue/vim-fern-git-status"
    use "simeji/winresizer"
    use "tpope/vim-commentary"
    use "tpope/vim-surround"
@@ -32,7 +33,7 @@ require("packer").startup(function(use)
    -- LSP関連プラグイン ---------------------------------------
    -- mason関係
    use 'williamboman/mason.nvim'
-   use 'williamboman/mason-lspconfig.nvim' 
+   use 'williamboman/mason-lspconfig.nvim'
    use "nvim-lua/plenary.nvim"
    -- lsp 
    use "neovim/nvim-lspconfig"
@@ -53,5 +54,6 @@ require("packer").startup(function(use)
      'nvim-telescope/telescope.nvim', tag = '0.1.8',
      requires = { {'nvim-lua/plenary.nvim'} }
    }
-
+   -- rust debugger
+   use 'puremourning/vimspector'
 end)

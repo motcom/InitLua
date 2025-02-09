@@ -27,7 +27,7 @@ vim.g.EasyMotion_use_smartsign_us = 1
 
 -- markdown previewの設定
 vim.g.mkdp_auto_start = 0
-vim.g.mkdp_auto_close = 0 
+vim.g.mkdp_auto_close = 0
 vim.g.mkdp_theme = "light"
 vim.api.nvim_set_keymap("n", "<F4>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
 vim.g.plantuml_previewer_plantuml_jar_path = "plant_uml.jar"
@@ -96,8 +96,6 @@ require("telescope").setup({
    }
 })
 
-
-
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
@@ -124,3 +122,19 @@ vim.keymap.set('n', "<leader>p",":LiveServer<CR>",{ noremap = true, silent = tru
 vim.o.foldmethod = "expr"
 vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldenable = false -- デフォルトでフォールドを開いた状態にする
+
+
+
+local function get_fern_selected_path()
+  local win_id = vim.api.nvim_get_current_win()
+  local path = vim.fn['fern#smart#leaf'](win_id)
+  if path == "" then
+    print("No file selected.")
+  else
+    print("Selected path: " .. path)
+  end
+end
+-- コマンドとして登録
+vim.api.nvim_create_user_command('FernPathLua', get_fern_selected_path, {})
+vim.keymap.set('n','yp',':FernPathLua<CR>',{noremap = true,silent = true  })
+

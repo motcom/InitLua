@@ -60,7 +60,6 @@ lspconfig.html.setup {
   filetypes = { "html", "htmldjango" },
   on_attach = function(client,bufnr)
     client.server_capabilities.documentFormattingProvider = true
-    
   end,
   settings = {
     html = {
@@ -74,8 +73,6 @@ lspconfig.html.setup {
     }
   }
 }
-
-
 
 
 -- CSS LSP 設定

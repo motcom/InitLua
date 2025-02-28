@@ -49,8 +49,8 @@ require('nvim-treesitter.configs').setup {
    sync_install=false,
    ignore_install={},
    auto_install =true,
-   ensure_installed = {"lua","python","toml","json",
-      "rust","markdown"},
+   ensure_installed = {"lua","python","json",
+      "markdown"},
    indent = {
       enable = true
    },

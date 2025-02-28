@@ -2,15 +2,6 @@
 local keymap    = vim.api.nvim_set_keymap
 local keyopt    = { noremap = true, silent = true }
 ---------------------------------- Build Start -------------------------------------------
-local function build()
-   local ext = vim.fn.expand("%:e")
-   if ext == "rs" then
-      vim.cmd("w!")
-      vim.cmd("!cargo build")
-   end
-end
-vim.api.nvim_create_user_command("Build", build, {})
----------------------------------- Build End -------------------------------------------
 
 -------------------------------- Run Setting Start ----------------------------------------
 local function run()
@@ -22,9 +13,6 @@ local function run()
       else
          vim.cmd("!python %")
       end
-   elseif ext == "rs" then
-      vim.cmd("w!")
-      vim.cmd("!cargo run")
    elseif ext == "lua" then
       vim.cmd("w")
       vim.cmd("!lua %")
@@ -32,48 +20,7 @@ local function run()
 end
 vim.api.nvim_create_user_command("Run", run, {})
 -------------------------------- Run Setting End ----------------------------------------
--- PhotoshopScript Run
-local function photoshop_run()
-   local ram_dsk = os.getenv("MYTMP")
-   if ram_dsk == nil then
-      print("ラムディスク取得できません")
-      return
-   end
-   local ram_dsk_file = ram_dsk .. [[\tmp_ps_script.js]]
-   local current_file = vim.fn.expand("%:p")
-   current_file = current_file:gsub("\\","\\\\")
-   local script_str = [[
-// Photoshop の COM オブジェクトを作成
-var photoshop = new ActiveXObject("Photoshop.Application");
 
-// 実行する JSX スクリプトのパス
-var scriptPath = "]].. current_file ..[[";
-
-// JSX を Photoshop に送る
-photoshop.DoJavaScriptFile(scriptPath);
-]]
-   local fp = io.open(ram_dsk_file,"w")
-   if fp then
-      fp:write(script_str)
-      fp:close()
-   else
-      print("file write error")
-   end
-   local command = '!cscript //E:JScript ' ..  ram_dsk_file
-   vim.cmd(command)
-end
-vim.api.nvim_create_user_command("Runp",photoshop_run,{})
-
--------------------------------- Test Start ---------------------------------------------
-local function test_run()
-   local ext = vim.fn.expand("%:e")
-   if ext == "rs" then
-      vim.cmd("w!")
-      vim.cmd("!cargo test")
-   end
-end
-vim.api.nvim_create_user_command("Test", test_run, {})
--------------------------------- Test End ---------------------------------------------
 
 --------------------------------- Python Runm Setting Start-------------------------------------
 -- プロジェクトのルートディレクトリを特定する関数

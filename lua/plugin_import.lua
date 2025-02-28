@@ -37,7 +37,6 @@ require("packer").startup(function(use)
    use "nvim-lua/plenary.nvim"
    -- lsp 
    use "neovim/nvim-lspconfig"
-   use 'simrat39/rust-tools.nvim' -- Rust Analyzerの機能拡張
 
    -- Snipet
    use "L3MON4D3/LuaSnip"
@@ -54,6 +53,4 @@ require("packer").startup(function(use)
      'nvim-telescope/telescope.nvim', tag = '0.1.8',
      requires = { {'nvim-lua/plenary.nvim'} }
    }
-   -- rust debugger
-   use 'puremourning/vimspector'
 end)

@@ -123,7 +123,7 @@ local function yankMatchingLines()
 end
 
 -- バッファを処理して更新する
-vim.api.nvim_create_user_command("SearchYank", yankMatchingLines, {})
+vim.api.nvim_create_user_command("Sy", yankMatchingLines, {})
 
 -- yankバッファをすべて削除 ---------------------------------
 local function clearAllYankBuffers()
@@ -133,7 +133,7 @@ local function clearAllYankBuffers()
       vim.fn.setreg(reg, "")
    end
 end
-vim.api.nvim_create_user_command("ClearBuf", clearAllYankBuffers, {})
+vim.api.nvim_create_user_command("Cb", clearAllYankBuffers, {})
 
 -- Cargo modules Tree viewer -----------------------------------
 vim.api.nvim_create_user_command('TreeLib', function()

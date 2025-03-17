@@ -13,10 +13,11 @@ require("mason").setup({
    }
 }
 )
-require("mason-lspconfig").setup()
+
 -------------------------------------------------------
 -- LSPの設定
 local lspconfig = require("lspconfig")
+
 local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 lspconfig.pyright.setup{
   on_attach = function(client, bufnr)

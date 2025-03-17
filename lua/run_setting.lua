@@ -63,7 +63,7 @@ local function create_run_command()
 end
 
 -- Neovimコマンドを定義
-vim.api.nvim_create_user_command("Runm", function()
+vim.api.nvim_create_user_command("Rum", function()
     local run_command = create_run_command()
     local result = vim.fn.system(run_command)
     print(run_command)

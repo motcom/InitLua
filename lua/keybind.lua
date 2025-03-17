@@ -12,8 +12,8 @@ keymap("n", "^", "0", keyopt)
 keymap("n", "f", "<Plug>(easymotion-overwin-f)", keyopt)
 keymap("n", "<Leader>#", ":ColorizerToggle<CR>"
    , { silent = true })
-keymap("n", "ga", "<Plug>(EasyAlign)", keyopt)
-keymap("x", "ga", "<Plug>(EasyAlign)", keyopt)
+keymap("n", "ga", "<Plug>(EasyAlign)*", keyopt)
+keymap("x", "ga", "<Plug>(EasyAlign)*", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 
 keymap("n", "<C-n>", ":cnext<CR>", keyopt)

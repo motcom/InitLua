@@ -42,14 +42,6 @@ vim.g.EasyMotion_smatcase = 1
 
 vim.diagnostic.config({severity_sort = true})
 
--- easy allign setting
-vim.g.easy_align_delimiters = {
-   ['--']={
-      pattern = '[--=]',
-      left_margin = 1,
-      right_margin = 1,
-   }
-}
 
 -- vifmrc filetype
 vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {

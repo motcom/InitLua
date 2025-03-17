@@ -12,10 +12,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end,
 })
 
--- easy allign setting
-vim.g.easy_align_ignore_groups = {
-    ["-"] = { pattern = "-\\{2,}" }
-}
 
 -- minimap の設定
 vim.g.minimap_width = 10

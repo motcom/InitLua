@@ -12,8 +12,10 @@ keymap("n", "^", "0", keyopt)
 keymap("n", "f", "<Plug>(easymotion-overwin-f)", keyopt)
 keymap("n", "<Leader>#", ":ColorizerToggle<CR>"
    , { silent = true })
-keymap("n", "ga", "<Plug>(EasyAlign)*", keyopt)
-keymap("x", "ga", "<Plug>(EasyAlign)*", keyopt)
+keymap("n", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
+keymap("x", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
+keymap("n", "<leader>c", ":RainbowAlign<CR>", keyopt)
+keymap("n", "<leader>s", ":RainbowShrink<CR>", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 
 keymap("n", "<C-n>", ":cnext<CR>", keyopt)
@@ -54,6 +56,7 @@ local function toggle_fern()
    end
 end
 vim.api.nvim_create_user_command("ToggleFern", toggle_fern, {})
+
 
 -- terminal open ----------------------------------------
 local function cmd()

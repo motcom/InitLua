@@ -1,7 +1,4 @@
 
-local keymap    = vim.api.nvim_set_keymap
-local keyopt    = { noremap = true, silent = true }
----------------------------------- Build Start -------------------------------------------
 
 -------------------------------- Run Setting Start ----------------------------------------
 local function run()

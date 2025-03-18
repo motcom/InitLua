@@ -18,6 +18,7 @@ require("mason").setup({
 -- LSPの設定
 local lspconfig = require("lspconfig")
 
+
 local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 lspconfig.pyright.setup{
   on_attach = function(client, bufnr)
@@ -40,6 +41,18 @@ lspconfig.pyright.setup{
     },
   },
 }
+
+-- json setting
+require("lspconfig").jsonls.setup({
+   capabilities = capabilities,
+    settings = {
+        json = {
+            schemas = require("schemastore").json.schemas(),
+            validate = { enable = true },
+            format = {enable = true},
+        },
+    },
+})
 
 lspconfig.lua_ls.setup {
   settings = {

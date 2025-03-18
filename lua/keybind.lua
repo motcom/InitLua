@@ -14,9 +14,8 @@ keymap("n", "<Leader>#", ":ColorizerToggle<CR>"
    , { silent = true })
 keymap("n", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
 keymap("x", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
-keymap("n", "<leader>c", ":RainbowAlign<CR>", keyopt)
-keymap("n", "<leader>s", ":RainbowShrink<CR>", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
+keymap("n", "<ESC><ESC>", ":noh",keyopt)
 
 keymap("n", "<C-n>", ":cnext<CR>", keyopt)
 keymap("n", "<C-p>", ":cprev<CR>", keyopt)
@@ -57,6 +56,20 @@ local function toggle_fern()
 end
 vim.api.nvim_create_user_command("ToggleFern", toggle_fern, {})
 
+
+-- json and csv format ----------------------------------
+local function format_csv_or_json()
+   local file_type = vim.bo.filetype
+   print(file_type)
+   if file_type  == "json" then
+      vim.lsp.buf.format()
+   elseif file_type == "rcsv_2c_simple_" then
+      vim.cmd("RainbowAlign")
+   end
+end
+vim.api.nvim_create_user_command("FmtCsvOrJson",format_csv_or_json,{})
+keymap("n", "<leader>f", ":FmtCsvOrJson<CR>", keyopt)
+keymap("n", "<leader>s", ":RainbowShrink<CR>", keyopt)
 
 -- terminal open ----------------------------------------
 local function cmd()

@@ -17,7 +17,6 @@ require("packer").startup(function(use)
      'wfxr/minimap.vim',
      as = 'minimap',
    }
-
    -- 整形------------------------------------------
    use "mechatroner/rainbow_csv"
    use({
@@ -48,7 +47,10 @@ require("packer").startup(function(use)
    use "hrsh7th/cmp-buffer" -- LSP補完の連携
    use "hrsh7th/cmp-path" -- ファイルパス補完
    use "hrsh7th/cmp-cmdline"
+   -- json
+   use "b0o/schemastore.nvim"
 
+   -- 検索
    use {
      'nvim-telescope/telescope.nvim', tag = '0.1.8',
      requires = { {'nvim-lua/plenary.nvim'} }

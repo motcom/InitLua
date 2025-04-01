@@ -18,6 +18,7 @@ require("mason").setup({
 -- LSPの設定
 local lspconfig = require("lspconfig")
 
+local cmp = require("cmp")
 
 local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 lspconfig.pyright.setup{
@@ -72,14 +73,10 @@ lspconfig.lua_ls.setup {
 
 -- rust tool rustanalyzer manager
 -- nvim-cmpの設定 ----------------------------------------
-local cmp = require("cmp")
-local luasnip = require("LuaSnip")
+local luasnip = require("luasnip")
 cmp.setup({
   window = {
-    documentation = {
-      max_height = 15,
-      max_width = 60,
-    },
+    documentation = cmp.config.window.bordered()
   },
   snippet = {
       expand = function(args)
@@ -87,24 +84,6 @@ cmp.setup({
       end,
    },
   mapping = {
-    ['<C-y>'] = cmp.mapping(function(fallback)
-      -- <C-y>でドキュメントをクリップボードにコピー
-      local entry = cmp.get_selected_entry()
-      if entry then
-        local completion_item = entry:get_completion_item()
-        local documentation = completion_item.documentation.value
-        -- 空でない場合のみコピー
-        if text_to_copy ~= "" then
-          vim.fn.setreg('+', documentation) -- クリップボードにコピー
-        else
-          print("No documentation or detail available")
-        end
-      else
-        print("No entry selected")
-        fallback()
-      end
-    end, { 'i', 'c' }), -- インサートモードとコマンドラインモードで有効
-
     ["<C-b>"] = cmp.mapping.scroll_docs(-4), -- ドキュメントを上にスクロール
     ["<C-f>"] = cmp.mapping.scroll_docs(4), -- ドキュメントを下にスクロール
     ["<C-Space>"] = cmp.mapping.complete(),
@@ -134,3 +113,42 @@ cmp.setup.filetype('python', {
   })
 })
 
+-- omnisharp  --------------------------------------------------------
+local omnisharp_extended = require("omnisharp_extended")
+local on_attach = function(_, bufnr)
+  -- OmniSharp (Telescope版)
+  vim.keymap.set("n", "gd", function()
+    omnisharp_extended.telescope_lsp_definition({ jump_type = "vsplit" })
+  end, opts)
+  vim.keymap.set("n", "gi", omnisharp_extended.telescope_lsp_implementation, opts)
+  vim.keymap.set("n", "gr", omnisharp_extended.telescope_lsp_references, opts)
+  vim.keymap.set("n", "<leader>D", omnisharp_extended.telescope_lsp_type_definition, opts)
+
+  -- Hover（通常 LSP 関数）
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+
+  -- Rename（Telescope内でなく、UIがある場合 telescope.nvimの拡張なし）
+  vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+
+  -- Code Action（Telescopeを使う場合はこちら）
+  vim.keymap.set("n", "<leader>ca", require("telescope.builtin").lsp_code_actions, opts)
+
+  -- Signature Help（関数引数の表示など）
+  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+end
+
+local pid = vim.fn.getpid()
+local omnisharp_bin = vim.fn.stdpath("data") .. "/mason/bin/omnisharp.cmd"
+require("lspconfig").omnisharp.setup({
+   cmd = {
+      omnisharp_bin,
+      "--languageserver",
+      "--hostPID",
+      tostring(pid),
+   },
+  on_attach = on_attach,
+  handlers = {
+    ["textDocument/definition"] = omnisharp_extended.handler,
+  },
+  -- その他オプション（必要に応じて）
+})

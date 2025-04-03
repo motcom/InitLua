@@ -11,8 +11,11 @@ local function run()
          vim.cmd("!python %")
       end
    elseif ext == "lua" then
-      vim.cmd("w")
+      vim.cmd("w!")
       vim.cmd("!lua %")
+   elseif ext == "c" then
+      vim.cmd("w!")
+      vim.cmd("!make")
    end
 end
 vim.api.nvim_create_user_command("Run", run, {})

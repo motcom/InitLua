@@ -19,6 +19,9 @@ keymap("n", "<ESC><ESC>", ":noh",keyopt)
 
 keymap("n", "<C-n>", ":cnext<CR>", keyopt)
 keymap("n", "<C-p>", ":cprev<CR>", keyopt)
+keymap("n", "<Tab>", ":bnext<CR>", keyopt)
+keymap("n", "<S-Tab>", ":bnext<CR>", keyopt)
+
 
 -- window move
 keymap("n","<leader>h","<C-w>h",keyopt)
@@ -42,6 +45,9 @@ keymap("t", "<C-c>", "<C-\\><C-n>:q<CR>", keyopt)
 keymap("n", "<Leader>m", ":MinimapToggle<CR>", keyopt)
 keymap("n", "<Leader><Leader>", ":ToggleFern<CR>", keyopt)
 keymap("n", "<Leader>z", ":ZenMode<CR>", keyopt)
+
+-- copilot  toggle
+keymap("n", "<Leader>c", ":CopilotChatToggle<CR>", keyopt)
 
 -- Fern をトグルする関数
 local toggle_fern_flag = false

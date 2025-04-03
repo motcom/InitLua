@@ -20,6 +20,9 @@ local lspconfig = require("lspconfig")
 
 local cmp = require("cmp")
 
+require("CopilotChat").setup({
+})
+
 local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 lspconfig.pyright.setup{
   on_attach = function(client, bufnr)
@@ -71,8 +74,6 @@ lspconfig.lua_ls.setup {
 }
 
 
--- rust tool rustanalyzer manager
--- nvim-cmpの設定 ----------------------------------------
 local luasnip = require("luasnip")
 cmp.setup({
   window = {
@@ -84,21 +85,25 @@ cmp.setup({
       end,
    },
   mapping = {
+   ['<Tab>'] = function(fallback)
+     local copilot = require('copilot.suggestion')
+     if require("cmp").visible() then
+       require("cmp").confirm({ select = true })
+     else
+       fallback()
+     end
+   end,
+
+
     ["<C-b>"] = cmp.mapping.scroll_docs(-4), -- ドキュメントを上にスクロール
     ["<C-f>"] = cmp.mapping.scroll_docs(4), -- ドキュメントを下にスクロール
     ["<C-Space>"] = cmp.mapping.complete(),
     ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
     ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
     ['<C-e>'] = cmp.mapping.abort(),
-    ["<Tab>"] = vim.schedule_wrap(function(fallback)
-     if cmp.visible() then
-         cmp.confirm({select = true})
-      else
-         fallback()
-      end
-    end),
   },
   sources = cmp.config.sources({
+    {name = "copilot"},
     { name = "nvim_lsp" }, -- LSPからの補完
     { name = "path" },     -- ファイルパス補完
   }),
@@ -152,3 +157,10 @@ require("lspconfig").omnisharp.setup({
   },
   -- その他オプション（必要に応じて）
 })
+
+
+-- cmp_capabilities の例
+require('lspconfig').clangd.setup({
+  capabilities = capabilities,
+})
+

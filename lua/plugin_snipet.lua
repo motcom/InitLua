@@ -3,8 +3,6 @@ local ls = require("luasnip")
 local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
-vim.api.nvim_set_keymap("i", "<C-k>", "<cmd>lua require'luasnip'.expand_or_jump()<CR>", { silent = true, noremap = true })
-vim.api.nvim_set_keymap("i", "<C-j>", "<cmd>lua require'luasnip'.jump(-1)<CR>", { silent = true, noremap = true })
 -- Vim Snipet Base Setting End  --------------------------------------------------
 
 ls.add_snippets("make", {

@@ -26,12 +26,18 @@ require("CopilotChat").setup({
 local capabilities = require'cmp_nvim_lsp'.default_capabilities()
 lspconfig.pyright.setup{
   on_attach = function(client, bufnr)
-    -- キーバインドや設定をLSPにアタッチしたときにカスタマイズ
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts) -- 定義へジャンプ
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)       -- ホバー表示
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts) -- リファレンスジャンプ
-    vim.keymap.set('n', 'gn', vim.lsp.buf.rename, opts) -- リネーム
+        local opts = { noremap=true, silent=true, buffer=bufnr }
+        local builtin = require("telescope.builtin")
+        vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
+        vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
+        vim.keymap.set("n", "gr", builtin.lsp_references, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+        vim.keymap.set("n", "<C-.>", builtin.lsp_code_actions, opts)
+        vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { noremap = true, silent = true })
+        vim.keymap.set("n", "<leader>d", builtin.lsp_type_definitions,opts)
   end,
+
   flags = {
     debounce_text_changes = 150, -- テキスト変更後の更新待機時間
   },
@@ -93,7 +99,6 @@ cmp.setup({
        fallback()
      end
    end,
-
 
     ["<C-b>"] = cmp.mapping.scroll_docs(-4), -- ドキュメントを上にスクロール
     ["<C-f>"] = cmp.mapping.scroll_docs(4), -- ドキュメントを下にスクロール
@@ -158,9 +163,58 @@ require("lspconfig").omnisharp.setup({
   -- その他オプション（必要に応じて）
 })
 
-
 -- cmp_capabilities の例
 require('lspconfig').clangd.setup({
   capabilities = capabilities,
+   on_attach = function(client, bufnr)
+        local opts = { noremap=true, silent=true, buffer=bufnr }
+        local builtin = require("telescope.builtin")
+        vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
+        vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
+        vim.keymap.set("n", "gr", builtin.lsp_references, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<C-.>", builtin.lsp_code_actions, opts)
+        vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+   end,
+
 })
 
+-- rust-analyzer --------------------------------------------------------
+lspconfig.rust_analyzer.setup({
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = { allFeatures = true },
+      checkOnSave = {
+        command = "clippy"
+      }
+    }
+  },
+   on_attach = function(client, bufnr)
+        local opts = { noremap=true, silent=true, buffer=bufnr }
+        local builtin = require("telescope.builtin")
+        vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
+        vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
+        vim.keymap.set("n", "gr", builtin.lsp_references, opts)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<C-.>", builtin.lsp_code_actions, opts)
+        vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+   end,
+})
+
+-- yamlls --------------------------------------------------------
+lspconfig.yamlls.setup({
+  on_attach = function(client, bufnr)
+    local opts = { noremap=true, silent=true, buffer=bufnr }
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+  end,
+  settings = {
+    yaml = {
+      keyOrdering = false, -- キー順でエラーが出るのを防ぐ（お好み）
+      format = {
+        enable = true
+      },
+      validate = true,
+    }
+  }
+})

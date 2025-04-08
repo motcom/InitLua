@@ -13,9 +13,6 @@ local function run()
    elseif ext == "lua" then
       vim.cmd("w!")
       vim.cmd("!lua %")
-   elseif ext == "cs" then
-      vim.cmd("w!")
-      vim.cmd("!dotnet run")
    elseif ext == "c" then
       vim.cmd("w!")
       vim.cmd("!make")
@@ -72,6 +69,5 @@ vim.api.nvim_create_user_command("Rum", function()
     print(run_command)
 end, {})
 
-local command = vim.fn.stdpath("data") .. "\\mason\\packages\\netcoredbg\\netcoredbg.exe"
 
 --------------------------------- Python Runm Setting End-------------------------------------

@@ -130,36 +130,26 @@ cmp.setup.filetype('python', {
    })
 })
 
--- omnisharp  --------------------------------------------------------
-local omnisharp_extended = require("omnisharp_extended")
-local on_attach = function(_, bufnr)
-   -- OmniSharp (Telescope版)
-   vim.keymap.set("n", "gd", function()
-      omnisharp_extended.telescope_lsp_definition({ jump_type = "vsplit" })
-   end, opts)
-   vim.keymap.set("n", "gi", omnisharp_extended.telescope_lsp_implementation, opts)
-   vim.keymap.set("n", "gr", omnisharp_extended.telescope_lsp_references, opts)
-   vim.keymap.set("n", "<leader>D", omnisharp_extended.telescope_lsp_type_definition, opts)
-   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
-   vim.keymap.set('n', '<C-l>', vim.lsp.buf.code_action, { noremap = true, silent = true })
-end
-
-local pid = vim.fn.getpid()
-local omnisharp_bin = vim.fn.stdpath("data") .. "/mason/bin/omnisharp.cmd"
-require("lspconfig").omnisharp.setup({
-   cmd = {
-      omnisharp_bin,
-      "--languageserver",
-      "--hostPID",
-      tostring(pid),
-   },
-   on_attach = on_attach,
-   handlers = {
-      ["textDocument/definition"] = omnisharp_extended.handler,
-   },
-   -- その他オプション（必要に応じて）
+-- python formatter
+require("lspconfig").ruff.setup({
+  on_attach = function(client, bufnr)
+    -- 必要なら設定（例：hover無効）
+    client.server_capabilities.hoverProvider = false
+    client.server_capabilities.completionProvider = nil
+    client.server_capabilities.definitionProvider = false
+    client.server_capabilities.referencesProvider = false
+    client.server_capabilities.signatureHelpProvider = nil
+    client.server_capabilities.documentSymbolProvider = false
+    client.server_capabilities.workspaceSymbolProvider = false
+    client.server_capabilities.codeActionProvider = false
+    client.server_capabilities.renameProvider = false
+    client.server_capabilities.documentHighlightProvider = false
+    client.server_capabilities.semanticTokensProvider = nil
+    client.server_capabilities.documentFormattingProvider = true  -- ← ここだけ残す
+    client.server_capabilities.documentRangeFormattingProvider = false
+  end,
 })
+
 
 -- cmp_capabilities の例
 require('lspconfig').clangd.setup({
@@ -176,19 +166,3 @@ require('lspconfig').clangd.setup({
 
 })
 
--- lemminx --------------------------------------------------------
-require("lspconfig").lemminx.setup({
-   filetypes = { "xml", "xaml" },
-   extensions = { "xml", "xaml" },
-   root_dir = require("lspconfig.util").root_pattern({ ".git", ".csproj", ".sln" }),
-   capabilities = capabilities,
-   on_attach = function(client, bufnr)
-      local opts = { noremap = true, silent = true, buffer = bufnr }
-      local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
-      vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
-      vim.keymap.set("n", "gr", builtin.lsp_references, opts)
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
-   end,
-})

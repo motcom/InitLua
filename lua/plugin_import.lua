@@ -33,7 +33,6 @@ require("packer").startup(function(use)
    use "nvim-lua/plenary.nvim"
    -- lsp
    use "neovim/nvim-lspconfig"
-   use "Hoffs/omnisharp-extended-lsp.nvim"
 
    -- Snipet
    use "L3MON4D3/LuaSnip"
@@ -69,26 +68,10 @@ require("packer").startup(function(use)
       'nvim-telescope/telescope.nvim', tag = '0.1.8',
       requires = { { 'nvim-lua/plenary.nvim' } }
    }
-   -- dap本体
-   use 'mfussenegger/nvim-dap'
-
-   -- Masonでデバッガーを管理してるなら（推奨）
-   use 'jay-babu/mason-nvim-dap.nvim'
-   use {
-      "rcarriga/nvim-dap-ui",
-      requires = {
-         "mfussenegger/nvim-dap",
-         "nvim-neotest/nvim-nio"
-      },
-      config = function()
-         require("plugin_dap") -- 設定は別ファイルに分けて読み込む
-      end
-   }
    -- uml
    use "aklt/plantuml-syntax"
    use "weirongxu/plantuml-previewer.vim"
    use "tyru/open-browser.vim"
-
 
    -- indent-blankline
    use {

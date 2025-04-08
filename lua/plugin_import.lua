@@ -1,7 +1,5 @@
-
 -- packer.nvimの初期化
 require("packer").startup(function(use)
-
    -- plugin 管理
    use "wbthomason/packer.nvim"
 
@@ -14,19 +12,17 @@ require("packer").startup(function(use)
    use "tpope/vim-commentary"
    use "tpope/vim-surround"
    use {
-     'wfxr/minimap.vim',
-     as = 'minimap',
+      'wfxr/minimap.vim',
+      as = 'minimap',
    }
    -- 整形------------------------------------------
    use "mechatroner/rainbow_csv"
    use({
-     'iamcco/markdown-preview.nvim',
-     run = function() vim.fn['mkdp#util#install']() end
+      'iamcco/markdown-preview.nvim',
+      run = function() vim.fn['mkdp#util#install']() end
    })
-   use "aklt/plantuml-syntax"
-   use "weirongxu/plantuml-previewer.vim"
    use "folke/zen-mode.nvim"
-   use {"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
+   use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
    use "norcalli/nvim-colorizer.lua"
    use "windwp/nvim-autopairs"
 
@@ -35,7 +31,7 @@ require("packer").startup(function(use)
    use 'williamboman/mason.nvim'
    use 'williamboman/mason-lspconfig.nvim'
    use "nvim-lua/plenary.nvim"
-   -- lsp 
+   -- lsp
    use "neovim/nvim-lspconfig"
    use "Hoffs/omnisharp-extended-lsp.nvim"
 
@@ -44,10 +40,10 @@ require("packer").startup(function(use)
    use "saadparwaiz1/cmp_luasnip"
 
    -- 補完関係
-   use "hrsh7th/nvim-cmp" -- 補完エンジン
+   use "hrsh7th/nvim-cmp"     -- 補完エンジン
    use "hrsh7th/cmp-nvim-lsp" -- LSP補完の連携
-   use "hrsh7th/cmp-buffer" -- LSP補完の連携
-   use "hrsh7th/cmp-path" -- ファイルパス補完
+   use "hrsh7th/cmp-buffer"   -- LSP補完の連携
+   use "hrsh7th/cmp-path"     -- ファイルパス補完
    use "hrsh7th/cmp-cmdline"
    -- json
    use "b0o/schemastore.nvim"
@@ -55,26 +51,53 @@ require("packer").startup(function(use)
    -- copilot
    use "github/copilot.vim"
    use({
-     "zbirenbaum/copilot-cmp",
-     after = { "copilot.lua" },
-     config = function()
-       require("copilot_cmp").setup()
-     end,
+      "zbirenbaum/copilot-cmp",
+      after = { "copilot.lua" },
+      config = function()
+         require("copilot_cmp").setup()
+      end,
    })
 
-   use {"CopilotC-Nvim/CopilotChat.nvim",
+   use { "CopilotC-Nvim/CopilotChat.nvim",
       requires = {
-         {"zbirenbaum/copilot.lua"},
-         {"nvim-lua/plenary.nvim",branch="master"}
+         { "zbirenbaum/copilot.lua" },
+         { "nvim-lua/plenary.nvim", branch = "master" }
       }
    }
    -- 検索
    use {
-     'nvim-telescope/telescope.nvim', tag = '0.1.8',
-     requires = { {'nvim-lua/plenary.nvim'} }
+      'nvim-telescope/telescope.nvim', tag = '0.1.8',
+      requires = { { 'nvim-lua/plenary.nvim' } }
+   }
+   -- dap本体
+   use 'mfussenegger/nvim-dap'
+
+   -- Masonでデバッガーを管理してるなら（推奨）
+   use 'jay-babu/mason-nvim-dap.nvim'
+   use {
+      "rcarriga/nvim-dap-ui",
+      requires = {
+         "mfussenegger/nvim-dap",
+         "nvim-neotest/nvim-nio"
+      },
+      config = function()
+         require("plugin_dap") -- 設定は別ファイルに分けて読み込む
+      end
+   }
+   -- uml
+   use "aklt/plantuml-syntax"
+   use "weirongxu/plantuml-previewer.vim"
+   use "tyru/open-browser.vim"
+
+
+   -- indent-blankline
+   use {
+      "lukas-reineke/indent-blankline.nvim",
+      config = function()
+         require("ibl").setup {
+            indent = { char = "│" },
+            scope = { enabled = true },
+         }
+      end
    }
 end)
-
-
-
-

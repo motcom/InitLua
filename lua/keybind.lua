@@ -32,8 +32,7 @@ keymap("n","<leader>l","<C-w>l",keyopt)
 
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
-keymap("i", ";;", "<ESC>$A;<ESC>", keyopt)
-keymap("i", ",,", "<ESC>$A,<ESC>", keyopt)
+keymap("i", "<C-l>", "<C-o>A", keyopt)
 
 -- terminal
 keymap("t", "<ESC>", "<C-\\><C-n>", keyopt)

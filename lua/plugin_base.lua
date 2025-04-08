@@ -26,7 +26,10 @@ vim.g.mkdp_auto_start = 0
 vim.g.mkdp_auto_close = 0
 vim.g.mkdp_theme = "light"
 vim.api.nvim_set_keymap("n", "<F4>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
-vim.g.plantuml_previewer_plantuml_jar_path = "plant_uml.jar"
+
+local plant_uml_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/plantuml-previewer.vim/lib/plantuml.jar"
+vim.g.plantuml_previewer_plantuml_jar_path = plant_uml_path
+
 
 -- 補完時の色
 vim.cmd [[
@@ -133,4 +136,5 @@ end
 -- コマンドとして登録
 vim.api.nvim_create_user_command('FernPathLua', get_fern_selected_path, {})
 vim.keymap.set('n','yp',':FernPathLua<CR>',{noremap = true,silent = true  })
+
 

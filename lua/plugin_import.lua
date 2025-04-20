@@ -35,6 +35,14 @@ require("packer").startup(function(use)
    use "neovim/nvim-lspconfig"
    use "Hoffs/omnisharp-extended-lsp.nvim"
 
+   -- hex
+   use {
+     'RaafatTurki/hex.nvim',
+     requires = { 'nvim-lua/plenary.nvim' },
+     config = function()
+       require("hex").setup()
+     end
+   }
    -- Snipet
    use "L3MON4D3/LuaSnip"
    use "saadparwaiz1/cmp_luasnip"
@@ -57,6 +65,7 @@ require("packer").startup(function(use)
          require("copilot_cmp").setup()
       end,
    })
+
 
    use { "CopilotC-Nvim/CopilotChat.nvim",
       requires = {
@@ -88,7 +97,6 @@ require("packer").startup(function(use)
    use "aklt/plantuml-syntax"
    use "weirongxu/plantuml-previewer.vim"
    use "tyru/open-browser.vim"
-
 
    -- indent-blankline
    use {

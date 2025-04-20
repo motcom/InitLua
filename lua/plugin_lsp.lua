@@ -42,8 +42,8 @@ lspconfig.pyright.setup {
    settings = {
       python = {
          analysis = {
-            typeCheckingMode = "basic",   -- 型チェックの厳密さ ("off", "basic", "strict")
-            autoSearchPaths = true,       -- パスを自動検索
+            typeCheckingMode = "basic",    -- 型チェックの厳密さ ("off", "basic", "strict")
+            autoSearchPaths = true,        -- パスを自動検索
             useLibraryCodeForTypes = true, -- ライブラリコードの型情報を使用
          },
       },
@@ -107,8 +107,8 @@ cmp.setup({
          end
       end,
 
-      ["<C-b>"] = cmp.mapping.scroll_docs(-4),  -- ドキュメントを上にスクロール
-      ["<C-f>"] = cmp.mapping.scroll_docs(4),   -- ドキュメントを下にスクロール
+      ["<C-b>"] = cmp.mapping.scroll_docs(-4),    -- ドキュメントを上にスクロール
+      ["<C-f>"] = cmp.mapping.scroll_docs(4),     -- ドキュメントを下にスクロール
       ["<C-Space>"] = cmp.mapping.complete(),
       ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
       ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
@@ -117,7 +117,7 @@ cmp.setup({
    sources = cmp.config.sources({
       { name = "copilot" },
       { name = "nvim_lsp" }, -- LSPからの補完
-      { name = "path" },   -- ファイルパス補完
+      { name = "path" },     -- ファイルパス補完
    }),
 })
 
@@ -126,7 +126,7 @@ cmp.setup.filetype('python', {
    sources = cmp.config.sources({
       { name = 'nvim_lsp' }, -- LSP補完
    }, {
-      { name = 'path' },   -- ファイルパス補完
+      { name = 'path' },     -- ファイルパス補完
    })
 })
 
@@ -159,10 +159,15 @@ require("lspconfig").omnisharp.setup({
       ["textDocument/definition"] = omnisharp_extended.handler,
    },
    -- その他オプション（必要に応じて）
+
 })
 
 -- cmp_capabilities の例
 require('lspconfig').clangd.setup({
+  cmd = {
+    "clangd",
+    "--compile-commands-dir=build"  -- buildにある場合
+  },
    capabilities = capabilities,
    on_attach = function(client, bufnr)
       local opts = { noremap = true, silent = true, buffer = bufnr }
@@ -176,19 +181,12 @@ require('lspconfig').clangd.setup({
 
 })
 
--- lemminx --------------------------------------------------------
-require("lspconfig").lemminx.setup({
-   filetypes = { "xml", "xaml" },
-   extensions = { "xml", "xaml" },
-   root_dir = require("lspconfig.util").root_pattern({ ".git", ".csproj", ".sln" }),
-   capabilities = capabilities,
-   on_attach = function(client, bufnr)
-      local opts = { noremap = true, silent = true, buffer = bufnr }
-      local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
-      vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
-      vim.keymap.set("n", "gr", builtin.lsp_references, opts)
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
-   end,
+
+require('lspconfig').cmake.setup({
+  cmd = { "cmake-language-server" },
+  filetypes = { "cmake" },
+  init_options = {
+    buildDirectory = "build",
+  },
+  root_dir = require('lspconfig.util').root_pattern("CMakePresets.json", "CTestConfig.cmake", ".git", "build", "CMakeLists.txt"),
 })

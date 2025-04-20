@@ -2,6 +2,8 @@
 -- ########## base set grp #############
 local op = vim.opt
 
+
+
 -- use system to clipboard
 op.clipboard:append { "unnamedplus" }
 
@@ -56,3 +58,17 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
 vim.o.foldmethod = "expr"
 vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldenable = false -- デフォルトでフォールドを開いた状態にする
+
+
+-- encoding toggle
+local toggle_encoding = true
+
+local toggle_encoding_func = function()
+   if toggle_encoding then
+       vim.bo.fileencoding = "utf-8"
+   else
+       vim.bo.fileencoding = "cp932"
+   end
+end
+
+

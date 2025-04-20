@@ -170,6 +170,20 @@ require("lspconfig").omnisharp.setup({
    },
    -- その他オプション（必要に応じて）
 })
+-- cmake
+-- cmake-language-server の設定
+require("lspconfig").cmake.setup({
+    on_attach = function(_, bufnr)
+        local opf = { noremap=true, silent=true, buffer=bufnr }
+        local map = vim.keymap.set
+        map("n", "K", vim.lsp.buf.hover, opf)
+        map("n", "gd", vim.lsp.buf.definition, opf)
+        map("n", "<leader>rn", vim.lsp.buf.rename, opf)
+        map("n", "gr", vim.lsp.buf.references, opf)
+    end,
+    capabilities = require('cmp_nvim_lsp').default_capabilities(),
+})
+
 
 local compiler_path = os.getenv("C_COMPILER_DIR")
 -- clnagd setting ------------------------------------------------------------
@@ -191,3 +205,5 @@ require('lspconfig').clangd.setup({
     "compile_commands.json", "compile_flags.txt", "configure.ac", ".git"
   ),
 })
+
+

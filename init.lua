@@ -1,6 +1,7 @@
 require("base")
 require("keybind")
 require("run_setting")
+require("build_setting")
 require("plugin_import")
 require("plugin_base")
 require("plugin_lsp")

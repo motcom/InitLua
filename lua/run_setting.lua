@@ -18,7 +18,8 @@ local function run()
       vim.cmd("!dotnet run")
    elseif ext == "c" then
       vim.cmd("w!")
-      vim.cmd("!make")
+      vim.fn.system("cmake --build build --config DEBUG")
+      vim.cmd("!build\\main.exe")
    end
 end
 vim.api.nvim_create_user_command("Run", run, {})

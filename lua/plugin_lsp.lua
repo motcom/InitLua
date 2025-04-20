@@ -1,22 +1,32 @@
 local opts = { noremap = true, silent = true }
+
 --  mason setting -------------------------------------
 
----@diagnostic disable-next-line:undefined-field
 require("mason").setup({
-   ui = {
-      icons = {
-         package_installed   = "",
-         package_pending     = "",
-         package_uninstalled = "",
-      },
-   }
-}
-)
+  install_root_dir = vim.fn.stdpath("data") .. "/mason",
+  PATH = "prepend",
+  log_level = vim.log.levels.INFO,
+  max_concurrent_installers = 4,
+  registries = { "github:mason-org/mason-registry" },
+  providers = {
+    "mason.providers.client",
+    "mason.providers.registry-api"
+  },
+  github = {}, -- ← ダミーで追加
+  pip = {},    -- ← ダミーで追加
+  ui = {
+    icons = {
+      package_installed = "○",
+      package_pending = "p",
+      package_uninstalled = "x"
+    }
+  }
+})
 
 -------------------------------------------------------
 -- LSPの設定
 local lspconfig = require("lspconfig")
-
+local util = require("lspconfig.util")
 local cmp = require("cmp")
 
 require("CopilotChat").setup({
@@ -24,16 +34,16 @@ require("CopilotChat").setup({
 
 local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
 lspconfig.pyright.setup {
-   on_attach = function(client, bufnr)
-      local opts = { noremap = true, silent = true, buffer = bufnr }
+   on_attach = function(_, bufnr)
+      local optf = { noremap = true, silent = true, buffer = bufnr }
       local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
-      vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
-      vim.keymap.set("n", "gr", builtin.lsp_references, opts)
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+      vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
+      vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
+      vim.keymap.set("n", "gr", builtin.lsp_references, optf)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
       vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { noremap = true, silent = true })
-      vim.keymap.set("n", "<leader>d", builtin.lsp_type_definitions, opts)
+      vim.keymap.set("n", "<leader>d", builtin.lsp_type_definitions, optf)
    end,
 
    flags = {
@@ -75,14 +85,14 @@ lspconfig.lua_ls.setup {
       },
    },
    capabilities = capabilities,
-   on_attach = function(client, bufnr)
-      local opts = { noremap = true, silent = true, buffer = bufnr }
+   on_attach = function(_, bufnr)
+      local optf = { noremap = true, silent = true, buffer = bufnr }
       local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
-      vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
-      vim.keymap.set("n", "gr", builtin.lsp_references, opts)
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+      vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
+      vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
+      vim.keymap.set("n", "gr", builtin.lsp_references, optf)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
    end,
 }
 
@@ -99,7 +109,6 @@ cmp.setup({
    },
    mapping = {
       ['<Tab>'] = function(fallback)
-         local copilot = require('copilot.suggestion')
          if require("cmp").visible() then
             require("cmp").confirm({ select = true })
          else
@@ -133,15 +142,16 @@ cmp.setup.filetype('python', {
 -- omnisharp  --------------------------------------------------------
 local omnisharp_extended = require("omnisharp_extended")
 local on_attach = function(_, bufnr)
+   local optf = { noremap = true, silent = true, buffer = bufnr }
    -- OmniSharp (Telescope版)
    vim.keymap.set("n", "gd", function()
       omnisharp_extended.telescope_lsp_definition({ jump_type = "vsplit" })
-   end, opts)
-   vim.keymap.set("n", "gi", omnisharp_extended.telescope_lsp_implementation, opts)
-   vim.keymap.set("n", "gr", omnisharp_extended.telescope_lsp_references, opts)
-   vim.keymap.set("n", "<leader>D", omnisharp_extended.telescope_lsp_type_definition, opts)
-   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+   end, optf)
+   vim.keymap.set("n", "gi", omnisharp_extended.telescope_lsp_implementation, optf)
+   vim.keymap.set("n", "gr", omnisharp_extended.telescope_lsp_references, optf)
+   vim.keymap.set("n", "<leader>D", omnisharp_extended.telescope_lsp_type_definition, optf)
+   vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
    vim.keymap.set('n', '<C-l>', vim.lsp.buf.code_action, { noremap = true, silent = true })
 end
 
@@ -161,34 +171,23 @@ require("lspconfig").omnisharp.setup({
    -- その他オプション（必要に応じて）
 })
 
--- cmp_capabilities の例
+local compiler_path = os.getenv("C_COMPILER_DIR")
+-- clnagd setting ------------------------------------------------------------
 require('lspconfig').clangd.setup({
    capabilities = capabilities,
-   on_attach = function(client, bufnr)
-      local opts = { noremap = true, silent = true, buffer = bufnr }
+   cmd = { "clangd" ,"--compile-commands-dir=build","--query-driver="..compiler_path.."/*"},
+   filetype = { "c" },
+   on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
-      vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
-      vim.keymap.set("n", "gr", builtin.lsp_references, opts)
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
+      local optf = { noremap = true, silent = true, buffer = bufnr }
+      vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
+      vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
+      vim.keymap.set("n", "gr", builtin.lsp_references, optf)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
    end,
-
-})
-
--- lemminx --------------------------------------------------------
-require("lspconfig").lemminx.setup({
-   filetypes = { "xml", "xaml" },
-   extensions = { "xml", "xaml" },
-   root_dir = require("lspconfig.util").root_pattern({ ".git", ".csproj", ".sln" }),
-   capabilities = capabilities,
-   on_attach = function(client, bufnr)
-      local opts = { noremap = true, silent = true, buffer = bufnr }
-      local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "gd", builtin.lsp_definitions, opts)
-      vim.keymap.set("n", "gi", builtin.lsp_implementations, opts)
-      vim.keymap.set("n", "gr", builtin.lsp_references, opts)
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, opts)
-   end,
+  root_dir = util.root_pattern(
+    ".clangd", ".clang-tidy", ".clang-format",
+    "compile_commands.json", "compile_flags.txt", "configure.ac", ".git"
+  ),
 })

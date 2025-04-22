@@ -186,11 +186,10 @@ require("lspconfig").cmake.setup({
 })
 
 
-local compiler_path = os.getenv("C_COMPILER_DIR")
 -- clnagd setting ------------------------------------------------------------
 require('lspconfig').clangd.setup({
    capabilities = capabilities,
-   cmd = { "clangd" ,"--compile-commands-dir=build","--query-driver="..compiler_path.."/*"},
+   cmd = { "clangd" ,"--compile-commands-dir=."},
    filetype = { "c" },
    on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")

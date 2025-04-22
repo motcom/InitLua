@@ -1,7 +1,7 @@
 require("base")
 require("keybind")
 require("initc_setting")
-require("buildc_setting")
+require("build_setting")
 require("run_setting")
 require("plugin_import")
 require("plugin_base")

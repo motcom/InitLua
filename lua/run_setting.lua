@@ -15,7 +15,8 @@ local function run()
       vim.cmd("!lua %")
    elseif ext == "c" then
       vim.cmd("w!")
-      vim.cmd("!make")
+      vim.fn.system("cmake --build build --config DEBUG")
+      vim.cmd("!build\\Debug\\my_project.exe")
    end
 end
 vim.api.nvim_create_user_command("Run", run, {})

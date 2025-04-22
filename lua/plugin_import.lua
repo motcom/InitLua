@@ -34,6 +34,14 @@ require("packer").startup(function(use)
    -- lsp
    use "neovim/nvim-lspconfig"
 
+   -- hex
+   use {
+     'RaafatTurki/hex.nvim',
+     requires = { 'nvim-lua/plenary.nvim' },
+     config = function()
+       require("hex").setup()
+     end
+   }
    -- Snipet
    use "L3MON4D3/LuaSnip"
    use "saadparwaiz1/cmp_luasnip"
@@ -56,6 +64,7 @@ require("packer").startup(function(use)
          require("copilot_cmp").setup()
       end,
    })
+
 
    use { "CopilotC-Nvim/CopilotChat.nvim",
       requires = {

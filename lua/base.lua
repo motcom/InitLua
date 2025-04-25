@@ -2,8 +2,6 @@
 -- ########## base set grp #############
 local op = vim.opt
 
-
-
 -- use system to clipboard
 op.clipboard:append { "unnamedplus" }
 
@@ -52,7 +50,6 @@ vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
         vim.bo.filetype = "vim"
     end,
 })
-
 
 -- フォールディングをexprに設定し、treesitterのfoldexprを使用
 vim.o.foldmethod = "expr"

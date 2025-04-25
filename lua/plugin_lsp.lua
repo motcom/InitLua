@@ -189,7 +189,7 @@ require("lspconfig").cmake.setup({
 -- clnagd setting ------------------------------------------------------------
 require('lspconfig').clangd.setup({
    capabilities = capabilities,
-   cmd = { "clangd" ,"--compile-commands-dir=."},
+   cmd = { "clangd" ,"--compile-commands-dir=.","--offset-encoding=utf-16"},
    filetype = { "c" },
    on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")
@@ -205,7 +205,6 @@ require('lspconfig').clangd.setup({
     "compile_commands.json", "compile_flags.txt", "configure.ac", ".git"
   ),
 })
-
 
 require('lspconfig').cmake.setup({
   cmd = { "cmake-language-server" },

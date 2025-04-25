@@ -1,3 +1,44 @@
+-- Get C Project Name ---------------------------------------
+local function find_project_root_c()
+   local dir = io.popen("cd"):read("*l")
+   local drive = dir:match("^%a:")
+   local markers = { "CMakeLists.txt","main.c","main.cpp"}
+   while dir ~= drive do
+      for _,marker in ipairs(markers) do
+         local file = dir .. "\\" .. marker
+         local fp = io.open(file, "r")
+         if fp then
+            fp:close()
+            return dir
+         end
+      end
+      dir = dir:match("^(.*)[/\\][^/\\]+$") or drive
+   end
+   return nil
+end
+
+local get_c_project_name = function()
+   local dir_c_root = find_project_root_c()
+   local cmake_file_path = dir_c_root .. "\\CMakeLists.txt"
+
+   local result = nil
+   local fp_cmake = io.open(cmake_file_path, "r")
+   if fp_cmake then
+      for l in fp_cmake:lines() do
+         local tmp = l:match("^add_executable%((.*)%s.*%)")
+         if tmp then
+            result = tmp
+         end
+      end
+      fp_cmake:close()
+   else
+      print("CMakeFiles.txt not found.")
+   end
+   return result
+end
+-- Get C Project Name ---------------------------------------
+
+
 
 
 -------------------------------- Run Setting Start ----------------------------------------
@@ -18,8 +59,11 @@ local function run()
       vim.cmd("!dotnet run")
    elseif ext == "c" then
       vim.cmd("w!")
-      vim.fn.system("cmake --build build --config DEBUG")
-      vim.cmd("!build\\Debug\\my_project.exe")
+      vim.cmd("!cmake --build build --config DEBUG")
+      local project_name = get_c_project_name()
+      local result_run_c = "!build\\" .. project_name .. ".exe"
+      print(result_run_c)
+      vim.cmd(result_run_c)
    end
 end
 vim.api.nvim_create_user_command("Run", run, {})

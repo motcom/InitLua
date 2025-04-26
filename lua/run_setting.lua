@@ -54,16 +54,6 @@ local function run()
    elseif ext == "lua" then
       vim.cmd("w!")
       vim.cmd("!lua %")
-   elseif ext == "cs" then
-      vim.cmd("w!")
-      vim.cmd("!dotnet run")
-   elseif ext == "c" then
-      vim.cmd("w!")
-      vim.cmd("!cmake --build build --config DEBUG")
-      local project_name = get_c_project_name()
-      local result_run_c = "!build\\" .. project_name .. ".exe"
-      print(result_run_c)
-      vim.cmd(result_run_c)
    end
 end
 vim.api.nvim_create_user_command("Run", run, {})

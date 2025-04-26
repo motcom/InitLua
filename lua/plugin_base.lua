@@ -145,7 +145,6 @@ require 'hex'.setup {
 
   -- CLI コマンド：16進数データからバイナリに戻すためのコマンド
   assemble_cmd = 'xxd -r',
-  
   -- BufReadPre（バッファ読み込み前）に実行される関数：バイナリかどうか判定する
   is_file_binary_pre_read = function()
     -- バッファの内容がバイナリデータかどうかを判定するロジックを記述

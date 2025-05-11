@@ -1,5 +1,6 @@
 
 
+-- Cのrunセッティングはcmakeで作り直さないで実行しているファイルが増えた場合はbuildするひつようがあるのでBuildを実行してからrunをする
 -------------------------------- Run Setting Start ----------------------------------------
 local function run()
    local ext = vim.fn.expand("%:e")
@@ -13,10 +14,10 @@ local function run()
    elseif ext == "lua" then
       vim.cmd("w!")
       vim.cmd("!lua %")
-   elseif ext == "c" then
+   elseif ext == "c" or ext=="cpp" then
       vim.cmd("w!")
       vim.fn.system("cmake --build build --config DEBUG")
-      vim.cmd("!build\\Debug\\my_project.exe")
+      vim.cmd("!build\\out.exe")
    end
 end
 vim.api.nvim_create_user_command("Run", run, {})

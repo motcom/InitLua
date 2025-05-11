@@ -30,8 +30,16 @@ vim.api.nvim_command('autocmd FileType * setlocal formatoptions-=c formatoptions
 op.autochdir = true
 
 -- encoding
-op.encoding = "utf-8"
-op.fileencoding = "utf-8"
+vim.opt.encoding = 'utf-8'
+vim.opt.fileencodings = { 'cp932', 'utf-8', 'euc-jp' }
+
+-- C/C++ファイルは常にcp932で保存
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = { "*.c", "*.cpp", "*.h" },
+  callback = function()
+    vim.bo.fileencoding = "cp932"
+  end
+})
 
 -- syntax on
 vim.cmd("syntax enable")

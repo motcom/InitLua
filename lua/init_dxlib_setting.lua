@@ -86,7 +86,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 ]]
 
+
+-- clang-formatの設定ファイルを作成する
+local clang_format_file_path_c = ".clang-format"
+local clang_format_init_c = [[
+BasedOnStyle: LLVM
+IndentCaseLabels: true
+UseTab: Never
+TabWidth: 3 
+IndentWidth: 3
+BreakBeforeBraces: Allman
+]]
+
 local write_make_file_dxlib_cpp = function()
+   -- cmake_file_pathを作成する
    print("cmake path:" .. cmake_file_path)
    local cmake_file = io.open(cmake_file_path, "w")
    if cmake_file then
@@ -96,9 +109,9 @@ local write_make_file_dxlib_cpp = function()
       print("Error: Unable to open CMakeLists.txt for writing.")
    end
 
+   -- main.cppが存在しない場合にのみmain.cppを作成する
    print("main_dxlibfile_path:" .. main_dxlib_file_path)
-   -- main.cが存在しない場合にのみmain.cを作成する
-   if vim.fn.filereadable("main.c") == 0 then
+   if vim.fn.filereadable(main_dxlib_file_path) == 0 then
       local mainc_file = io.open(main_dxlib_file_path , "w")
       if mainc_file then
          mainc_file:write(main_dxlib_init)
@@ -107,6 +120,18 @@ local write_make_file_dxlib_cpp = function()
          print("Error: Unable to open main.c for writing.")
       end
    end
+
+   -- clang-formatの設定ファイルを作成する
+   if vim.fn.filereadable(clang_format_file_path_c) == 0 then
+      local clang_format_file = io.open(clang_format_file_path_c, "w")
+      if clang_format_file then
+         clang_format_file:write(clang_format_init_c)
+         clang_format_file:close()
+      else
+         print("Error: Unable to open .clang-format for writing.")
+      end
+   end
+
 
    vim.cmd("!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc.exe -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
    vim.cmd("!cmake --build build --config DEBUG")

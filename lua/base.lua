@@ -1,4 +1,3 @@
-
 -- ########## base set grp #############
 local op = vim.opt
 
@@ -30,17 +29,20 @@ vim.api.nvim_command('autocmd FileType * setlocal formatoptions-=c formatoptions
 op.autochdir = true
 
 -- encoding
+
 vim.opt.encoding = 'utf-8'
 vim.opt.fileencodings = { 'cp932', 'utf-8', 'euc-jp' }
 
 -- C/C++ファイルは常にcp932で保存
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-  pattern = { "*.c", "*.cpp", "*.h" },
-  callback = function()
-    vim.bo.fileencoding = "cp932"
-  end
+   pattern = { "*.c", "*.cpp", "*.h" },
+   callback = function()
+      vim.bo.fileencoding = "cp932"
+      vim.opt_local.cindent = true
+      vim.opt_local.smartindent = false
+      vim.opt_local.cinoptions = ":0s"
+   end
 })
-
 -- syntax on
 vim.cmd("syntax enable")
 vim.cmd.colorscheme "gruvbox"
@@ -50,15 +52,15 @@ local my_python           = os.getenv("MYPYTHON")
 vim.g.python3_host_prog   = my_python
 vim.g.EasyMotion_smatcase = 1
 
-vim.diagnostic.config({severity_sort = true})
+vim.diagnostic.config({ severity_sort = true })
 
 
 -- vifmrc filetype
-vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
-    pattern = "vifmrc",
-    callback = function()
-        vim.bo.filetype = "vim"
-    end,
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+   pattern = "vifmrc",
+   callback = function()
+      vim.bo.filetype = "vim"
+   end,
 })
 
 
@@ -73,10 +75,8 @@ local toggle_encoding = true
 
 local toggle_encoding_func = function()
    if toggle_encoding then
-       vim.bo.fileencoding = "utf-8"
+      vim.bo.fileencoding = "utf-8"
    else
-       vim.bo.fileencoding = "cp932"
+      vim.bo.fileencoding = "cp932"
    end
 end
-
-

@@ -165,8 +165,7 @@ require('lspconfig').clangd.setup({
    capabilities = capabilities,
    cmd = { "clangd" ,"--compile-commands-dir=."},
    filetype = { "c","cpp" },
-   on_attach = function(client, bufnr)
-      client.server_capabilities.documentFormattingProvider = false
+   on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")
       local optf = { noremap = true, silent = true, buffer = bufnr }
       vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)

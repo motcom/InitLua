@@ -4,6 +4,7 @@ require("packer").startup(function(use)
    use "wbthomason/packer.nvim"
 
    -- BasicPlugin ----------------------------------
+   use "windwp/nvim-autopairs"
    use "easymotion/vim-easymotion"
    use "junegunn/vim-easy-align"
    use "lambdalisue/fern.vim"

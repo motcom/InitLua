@@ -158,3 +158,5 @@ require 'hex'.setup {
     -- true または false を返す必要がある
   end,
 }
+
+require("nvim-autopairs").setup {}

@@ -160,43 +160,11 @@ require("lspconfig").ruff.setup({
 })
 
 
--- omnisharp  --------------------------------------------------------
-local omnisharp_extended = require("omnisharp_extended")
-local on_attach = function(_, bufnr)
-   local optf = { noremap = true, silent = true, buffer = bufnr }
-   -- OmniSharp (Telescope版)
-   vim.keymap.set("n", "gd", function()
-      omnisharp_extended.telescope_lsp_definition({ jump_type = "vsplit" })
-   end, optf)
-   vim.keymap.set("n", "gi", omnisharp_extended.telescope_lsp_implementation, optf)
-   vim.keymap.set("n", "gr", omnisharp_extended.telescope_lsp_references, optf)
-   vim.keymap.set("n", "<leader>D", omnisharp_extended.telescope_lsp_type_definition, optf)
-   vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
-   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
-   vim.keymap.set('n', '<C-l>', vim.lsp.buf.code_action, { noremap = true, silent = true })
-end
-
-local pid = vim.fn.getpid()
-local omnisharp_bin = vim.fn.stdpath("data") .. "/mason/bin/omnisharp.cmd"
-require("lspconfig").omnisharp.setup({
-   cmd = {
-      omnisharp_bin,
-      "--languageserver",
-      "--hostPID",
-      tostring(pid),
-   },
-   on_attach = on_attach,
-   handlers = {
-      ["textDocument/definition"] = omnisharp_extended.handler,
-   },
-   -- その他オプション（必要に応じて）
-
-})
 
 require('lspconfig').clangd.setup({
    capabilities = capabilities,
    cmd = { "clangd" ,"--compile-commands-dir=."},
-   filetype = { "c" },
+   filetype = { "c","cpp" },
    on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")
       local optf = { noremap = true, silent = true, buffer = bufnr }
@@ -207,8 +175,7 @@ require('lspconfig').clangd.setup({
       vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
    end,
   root_dir = util.root_pattern(
-    ".clangd", ".clang-tidy", ".clang-format",
-    "compile_commands.json", "compile_flags.txt", "configure.ac", ".git"
+      ".git","CMakeLists.txt"
   ),
 })
 

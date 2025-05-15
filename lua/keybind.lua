@@ -32,7 +32,9 @@ keymap("n","<leader>l","<C-w>l",keyopt)
 
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
-keymap("i", "<C-l>", "<C-o>A", keyopt)
+keymap("i", ";;", "<C-o>A;", keyopt)
+keymap("i", "<C-l>", "<C-o>l", keyopt)
+keymap("i", "<C-h>", "<C-o>h", keyopt)
 
 -- terminal
 keymap("t", "<ESC>", "<C-\\><C-n>", keyopt)
@@ -47,7 +49,9 @@ keymap("n", "<Leader><Leader>", ":ToggleFern<CR>", keyopt)
 keymap("n", "<Leader>z", ":ZenMode<CR>", keyopt)
 
 -- copilot  toggle
-keymap("n", "<Leader>c", ":CopilotChatToggle<CR>", keyopt)
+keymap("n", "<Leader>cc", ":CopilotChatToggle<CR>", keyopt)
+keymap("n", "<Leader>ce", ":Copilot enable<CR>", keyopt)
+keymap("n", "<Leader>cd", ":Copilot disable<CR>", keyopt)
 
 -- Fern をトグルする関数
 local toggle_fern_flag = false

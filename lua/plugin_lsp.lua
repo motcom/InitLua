@@ -3,24 +3,24 @@ local opts = { noremap = true, silent = true }
 --  mason setting -------------------------------------
 
 require("mason").setup({
-  install_root_dir = vim.fn.stdpath("data") .. "/mason",
-  PATH = "prepend",
-  log_level = vim.log.levels.INFO,
-  max_concurrent_installers = 4,
-  registries = { "github:mason-org/mason-registry" },
-  providers = {
-    "mason.providers.client",
-    "mason.providers.registry-api"
-  },
-  github = {}, -- ← ダミーで追加
-  pip = {},    -- ← ダミーで追加
-  ui = {
-    icons = {
-      package_installed = "○",
-      package_pending = "p",
-      package_uninstalled = "x"
-    }
-  }
+   install_root_dir = vim.fn.stdpath("data") .. "/mason",
+   PATH = "prepend",
+   log_level = vim.log.levels.INFO,
+   max_concurrent_installers = 4,
+   registries = { "github:mason-org/mason-registry" },
+   providers = {
+      "mason.providers.client",
+      "mason.providers.registry-api"
+   },
+   github = {}, -- ← ダミーで追加
+   pip = {},    -- ← ダミーで追加
+   ui = {
+      icons = {
+         package_installed = "○",
+         package_pending = "p",
+         package_uninstalled = "x"
+      }
+   }
 })
 
 -------------------------------------------------------
@@ -141,30 +141,29 @@ cmp.setup.filetype('python', {
 
 -- python formatter
 require("lspconfig").ruff.setup({
-  on_attach = function(client, bufnr)
-    -- 必要なら設定（例：hover無効）
-    client.server_capabilities.hoverProvider = false
-    client.server_capabilities.completionProvider = nil
-    client.server_capabilities.definitionProvider = false
-    client.server_capabilities.referencesProvider = false
-    client.server_capabilities.signatureHelpProvider = nil
-    client.server_capabilities.documentSymbolProvider = false
-    client.server_capabilities.workspaceSymbolProvider = false
-    client.server_capabilities.codeActionProvider = false
-    client.server_capabilities.renameProvider = false
-    client.server_capabilities.documentHighlightProvider = false
-    client.server_capabilities.semanticTokensProvider = nil
-    client.server_capabilities.documentFormattingProvider = true  -- ← ここだけ残す
-    client.server_capabilities.documentRangeFormattingProvider = false
-  end,
+   on_attach = function(client, bufnr)
+      -- 必要なら設定（例：hover無効）
+      client.server_capabilities.hoverProvider = false
+      client.server_capabilities.completionProvider = nil
+      client.server_capabilities.definitionProvider = false
+      client.server_capabilities.referencesProvider = false
+      client.server_capabilities.signatureHelpProvider = nil
+      client.server_capabilities.documentSymbolProvider = false
+      client.server_capabilities.workspaceSymbolProvider = false
+      client.server_capabilities.codeActionProvider = false
+      client.server_capabilities.renameProvider = false
+      client.server_capabilities.documentHighlightProvider = false
+      client.server_capabilities.semanticTokensProvider = nil
+      client.server_capabilities.documentFormattingProvider = true -- ← ここだけ残す
+      client.server_capabilities.documentRangeFormattingProvider = false
+   end,
 })
-
 
 
 require('lspconfig').clangd.setup({
    capabilities = capabilities,
-   cmd = { "clangd" ,"--compile-commands-dir=."},
-   filetype = { "c","cpp" },
+   cmd = { "clangd", "--compile-commands-dir=.", "--fallback-style=none", "--query-driver=C:/Qt/Tools/mingw1310_64/bin/g++.exe" },
+   filetype = { "c", "cpp" },
    on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")
       local optf = { noremap = true, silent = true, buffer = bufnr }
@@ -174,26 +173,26 @@ require('lspconfig').clangd.setup({
       vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
       vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
    end,
-  root_dir = util.root_pattern(
-      ".git","CMakeLists.txt"
-  ),
+   root_dir = util.root_pattern(
+      ".git", "CMakeLists.txt"
+   ),
 })
-
 
 require('lspconfig').cmake.setup({
    capabilities = require('cmp_nvim_lsp').default_capabilities(),
-    on_attach = function(_, bufnr)
-        local opf = { noremap=true, silent=true, buffer=bufnr }
-        local map = vim.keymap.set
-        map("n", "K", vim.lsp.buf.hover, opf)
-        map("n", "gd", vim.lsp.buf.definition, opf)
-        map("n", "<leader>rn", vim.lsp.buf.rename, opf)
-        map("n", "gr", vim.lsp.buf.references, opf)
-    end,
-  cmd = { "cmake-language-server" },
-  filetypes = { "cmake" },
-  init_options = {
-    buildDirectory = "build",
-  },
-  root_dir = require('lspconfig.util').root_pattern("CMakePresets.json", "CTestConfig.cmake", ".git", "build", "CMakeLists.txt"),
+   on_attach = function(_, bufnr)
+      local opf = { noremap = true, silent = true, buffer = bufnr }
+      local map = vim.keymap.set
+      map("n", "K", vim.lsp.buf.hover, opf)
+      map("n", "gd", vim.lsp.buf.definition, opf)
+      map("n", "<leader>rn", vim.lsp.buf.rename, opf)
+      map("n", "gr", vim.lsp.buf.references, opf)
+   end,
+   cmd = { "cmake-language-server" },
+   filetypes = { "cmake" },
+   init_options = {
+      buildDirectory = "build",
+   },
+   root_dir = require('lspconfig.util').root_pattern("CMakePresets.json", "CTestConfig.cmake", ".git", "build",
+      "CMakeLists.txt"),
 })

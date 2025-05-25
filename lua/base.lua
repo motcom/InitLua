@@ -1,8 +1,6 @@
 -- ########## base set grp #############
 local op = vim.opt
 
-
-
 -- use system to clipboard
 op.clipboard:append { "unnamedplus" }
 
@@ -43,6 +41,14 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
       vim.opt_local.cinoptions = ":0s"
    end
 })
+
+-- vifmrc filetype
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+   pattern = "vifmrc",
+   callback = function()
+      vim.bo.filetype = "vim"
+   end,
+})
 -- syntax on
 vim.cmd("syntax enable")
 vim.cmd.colorscheme "gruvbox"
@@ -55,13 +61,6 @@ vim.g.EasyMotion_smatcase = 1
 vim.diagnostic.config({ severity_sort = true })
 
 
--- vifmrc filetype
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-   pattern = "vifmrc",
-   callback = function()
-      vim.bo.filetype = "vim"
-   end,
-})
 
 
 -- フォールディングをexprに設定し、treesitterのfoldexprを使用
@@ -70,13 +69,3 @@ vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldenable = false -- デフォルトでフォールドを開いた状態にする
 
 
--- encoding toggle
-local toggle_encoding = true
-
-local toggle_encoding_func = function()
-   if toggle_encoding then
-      vim.bo.fileencoding = "utf-8"
-   else
-      vim.bo.fileencoding = "cp932"
-   end
-end

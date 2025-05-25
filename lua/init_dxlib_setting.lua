@@ -1,7 +1,5 @@
-
-
 local cmake_file_path = "CMakeLists.txt"
-local cmake_dxLib_init =[[
+local cmake_dxLib_init = [[
 cmake_minimum_required(VERSION 3.10)
 project(MyDxLibApp)
 
@@ -9,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 # DxLib のパス--環境変数 DXLIB_PATH を使用
 set(DXLIB $ENV{DXLIB_PATH})
-message($ENV{DXLIB_PATH} )
+message(STATUS $ENV{DXLIB_PATH} )
 
 # インクルードディレクトリ
 include_directories(${DXLIB})
@@ -38,7 +36,7 @@ target_link_libraries(MyDxLibApp
    opusfile
    opus
    silk_common
-   celt 
+   celt
 )
 
 target_include_directories(MyDxLibApp PRIVATE ${DXLIB})
@@ -67,25 +65,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
    while (1) {
 
-      if (dx::ClearDrawScreen() != 0)
-         break;
+      dx::ClearDrawScreen();
 
       dx::DrawString(100,100, "Hello World", WHITE);
 
-      if (dx::ScreenFlip() != 0)
-         break;
+      dx::ScreenFlip();
       dx::WaitTimer(33);
-      if (dx::ProcessMessage() != 0)
-         break;
-      if (dx::CheckHitKey(KEY_INPUT_ESCAPE) == 1)
-         break;
-   }
-
+      if (dx::ProcessMessage() != 0) break;
+      if (dx::CheckHitKey(KEY_INPUT_ESCAPE) == 1) break;
    return 0;
 }
-
 ]]
-
 
 -- clang-formatの設定ファイルを作成する
 local clang_format_file_path_c = ".clang-format"
@@ -93,7 +83,7 @@ local clang_format_init_c = [[
 BasedOnStyle: LLVM
 IndentCaseLabels: true
 UseTab: Never
-TabWidth: 3 
+TabWidth: 3
 IndentWidth: 3
 BreakBeforeBraces: Allman
 ]]
@@ -103,7 +93,7 @@ local write_make_file_dxlib_cpp = function()
    print("cmake path:" .. cmake_file_path)
    local cmake_file = io.open(cmake_file_path, "w")
    if cmake_file then
-      cmake_file:write(cmake_dxLib_init )
+      cmake_file:write(cmake_dxLib_init)
       cmake_file:close()
    else
       print("Error: Unable to open CMakeLists.txt for writing.")
@@ -112,7 +102,7 @@ local write_make_file_dxlib_cpp = function()
    -- main.cppが存在しない場合にのみmain.cppを作成する
    print("main_dxlibfile_path:" .. main_dxlib_file_path)
    if vim.fn.filereadable(main_dxlib_file_path) == 0 then
-      local mainc_file = io.open(main_dxlib_file_path , "w")
+      local mainc_file = io.open(main_dxlib_file_path, "w")
       if mainc_file then
          mainc_file:write(main_dxlib_init)
          mainc_file:close()
@@ -133,7 +123,8 @@ local write_make_file_dxlib_cpp = function()
    end
 
 
-   vim.cmd("!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc.exe -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
+   vim.cmd(
+   "!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc.exe -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
    vim.cmd("!cmake --build build --config DEBUG")
 
    vim.fn.system("cp build/compile_commands.json .")

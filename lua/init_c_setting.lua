@@ -1,24 +1,23 @@
 -- cmakelistsを自動生成しmain.cを作成するテンプレートのためのlua
 -- 一度biuldしcompiler jsonを作成する
 
-
 ------------------ cmake init start -------------------
 local cmake_init = [[
 cmake_minimum_required(VERSION 3.10)
-project(my_project LANGUAGES C)
+project(my_project LANGUAGES CXX)
 
-add_executable(my_project main.c)
+add_executable(my_project main.cpp)
 ]]
 
 local cmake_file_path = "CMakeLists.txt"
------------------- cmake init end ---------------------
 
-local main_c_file_path = "main.c"
+------------------ cmake init end ---------------------
+local main_c_file_path = "main.cpp"
 local main_c_init = [[
 #include <stdio.h>
 
 int main() {
-    printf("Hello, World!\\n");
+    printf("Hello, World!\n");
     return 0;
 }
 ]]
@@ -32,6 +31,7 @@ UseTab: Never
 TabWidth: 3 
 IndentWidth: 3
 BreakBeforeBraces: Allman
+NamespaceIndentation: All
 ]]
 
 local write_make_file = function()
@@ -71,10 +71,8 @@ local write_make_file = function()
    -- CMakeLists.txtをビルドしてコンパイルコマンドを生成する
    vim.cmd("!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc.exe -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
    vim.cmd("!cmake --build build --config DEBUG")
-
    vim.fn.system("cp build/compile_commands.json .")
 end
 
-
-
 vim.api.nvim_create_user_command("Initc", write_make_file, {})
+

@@ -26,7 +26,6 @@ require("packer").startup(function(use)
    use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
    use "norcalli/nvim-colorizer.lua"
    use "windwp/nvim-autopairs"
-
    -- LSP関連プラグイン ---------------------------------------
    -- mason関係
    use 'williamboman/mason.nvim'
@@ -37,11 +36,11 @@ require("packer").startup(function(use)
 
    -- hex
    use {
-     'RaafatTurki/hex.nvim',
-     requires = { 'nvim-lua/plenary.nvim' },
-     config = function()
-       require("hex").setup()
-     end
+      'RaafatTurki/hex.nvim',
+      requires = { 'nvim-lua/plenary.nvim' },
+      config = function()
+         require("hex").setup()
+      end
    }
    -- Snipet
    use "L3MON4D3/LuaSnip"
@@ -93,4 +92,18 @@ require("packer").startup(function(use)
          }
       end
    }
+
+   use({
+      "danymat/neogen",
+      requires = "nvim-treesitter/nvim-treesitter",
+      config = function()
+         require("neogen").setup({
+            enabled = true,
+            languages = {
+               c = { template = { annotation_convention = "doxygen" } },
+               cpp = { template = { annotation_convention = "doxygen" } },
+            },
+         })
+      end,
+   })
 end)

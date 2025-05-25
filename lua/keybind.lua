@@ -33,7 +33,7 @@ keymap("n","<leader>l","<C-w>l",keyopt)
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
 keymap("i", ";;", "<C-o>A;", keyopt)
-keymap("i", "<C-l>", "<C-o>l", keyopt)
+keymap("i", "<C-l>", "<C-o>a", keyopt)
 keymap("i", "<C-h>", "<C-o>h", keyopt)
 
 -- terminal
@@ -50,8 +50,22 @@ keymap("n", "<Leader>z", ":ZenMode<CR>", keyopt)
 
 -- copilot  toggle
 keymap("n", "<Leader>cc", ":CopilotChatToggle<CR>", keyopt)
-keymap("n", "<Leader>ce", ":Copilot enable<CR>", keyopt)
-keymap("n", "<Leader>cd", ":Copilot disable<CR>", keyopt)
+keymap("n", "<Leader>ce", ":CopilotEnable<CR>", keyopt)
+keymap("n", "<Leader>cd", ":CopilotDisable<CR>", keyopt)
+
+-- copilot toggle function
+local function copilot_enable()
+   vim.cmd("Copilot enable")
+   print("copilot enable")
+end
+vim.api.nvim_create_user_command("CopilotEnable",copilot_enable, {})
+
+local function copilot_disable()
+   vim.cmd("Copilot disable")
+   print("copilot disable")
+end
+vim.api.nvim_create_user_command("CopilotDisable",copilot_disable, {})
+
 
 -- Fern をトグルする関数
 local toggle_fern_flag = false

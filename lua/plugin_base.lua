@@ -112,7 +112,7 @@ vim.api.nvim_create_user_command("LiveServer", function()
    -- 少し待ってからターミナルを閉じる（非同期で処理）
    vim.defer_fn(function()
       vim.cmd("q") -- ターミナルウィンドウを閉じる
-   end, 1000)    -- 1秒 (1000ミリ秒) 待機してから閉じる
+   end, 1000)      -- 1秒 (1000ミリ秒) 待機してから閉じる
 end, {})
 vim.keymap.set('n', "<leader>p", ":LiveServer<CR>", { noremap = true, silent = true })
 
@@ -140,23 +140,28 @@ vim.keymap.set('n', 'yp', ':FernPathLua<CR>', { noremap = true, silent = true })
 
 require 'hex'.setup {
 
-  -- CLI コマンド：16進数データをダンプするためのコマンド
-  dump_cmd = 'xxd -g 1 -u',
+   -- CLI コマンド：16進数データをダンプするためのコマンド
+   dump_cmd = 'xxd -g 1 -u',
 
-  -- CLI コマンド：16進数データからバイナリに戻すためのコマンド
-  assemble_cmd = 'xxd -r',
-  
-  -- BufReadPre（バッファ読み込み前）に実行される関数：バイナリかどうか判定する
-  is_file_binary_pre_read = function()
-    -- バッファの内容がバイナリデータかどうかを判定するロジックを記述
-    -- true または false を返す必要がある
-  end,
+   -- CLI コマンド：16進数データからバイナリに戻すためのコマンド
+   assemble_cmd = 'xxd -r',
 
-  -- BufReadPost（バッファ読み込み後）に実行される関数：バイナリかどうか判定する
-  is_file_binary_post_read = function()
-    -- バッファの内容がバイナリデータかどうかを判定するロジックを記述
-    -- true または false を返す必要がある
-  end,
+   -- BufReadPre（バッファ読み込み前）に実行される関数：バイナリかどうか判定する
+   is_file_binary_pre_read = function()
+      -- バッファの内容がバイナリデータかどうかを判定するロジックを記述
+      -- true または false を返す必要がある
+   end,
+
+   -- BufReadPost（バッファ読み込み後）に実行される関数：バイナリかどうか判定する
+   is_file_binary_post_read = function()
+      -- バッファの内容がバイナリデータかどうかを判定するロジックを記述
+      -- true または false を返す必要がある
+   end,
 }
 
 require("nvim-autopairs").setup {}
+
+-- doxygen comment
+vim.keymap.set("n", "<Leader>df", function()
+   require("neogen").generate()
+end, { desc = "Generate Doxygen comment" })

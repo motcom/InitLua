@@ -24,7 +24,7 @@ vim.g.EasyMotion_use_smartsign_us = 1
 vim.g.mkdp_auto_start = 0
 vim.g.mkdp_auto_close = 0
 vim.g.mkdp_theme = "light"
-vim.api.nvim_set_keymap("n", "<F4>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<F3>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
 
 local plant_uml_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/plantuml-previewer.vim/lib/plantuml.jar"
 vim.g.plantuml_previewer_plantuml_jar_path = plant_uml_path

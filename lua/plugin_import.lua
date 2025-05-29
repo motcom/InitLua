@@ -2,7 +2,7 @@
 require("packer").startup(function(use)
    -- plugin 管理
    use "wbthomason/packer.nvim"
-
+   use "EdenEast/nightfox.nvim"
    -- BasicPlugin ----------------------------------
    use "windwp/nvim-autopairs"
    use "easymotion/vim-easymotion"

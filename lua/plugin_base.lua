@@ -23,7 +23,9 @@ vim.g.EasyMotion_use_smartsign_us = 1
 -- markdown previewの設定
 vim.g.mkdp_auto_start = 0
 vim.g.mkdp_auto_close = 0
-vim.g.mkdp_theme = "light"
+vim.g.mkdp_markdown_css = os.getenv("MYDATA") .. "/markdown.css"
+vim.g.mkdp_theme = "dark"
+
 vim.api.nvim_set_keymap("n", "<F3>", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
 
 local plant_uml_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/plantuml-previewer.vim/lib/plantuml.jar"

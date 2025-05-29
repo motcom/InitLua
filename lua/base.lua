@@ -51,7 +51,7 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 })
 -- syntax on
 vim.cmd("syntax enable")
-vim.cmd.colorscheme "gruvbox"
+vim.cmd.colorscheme "terafox"
 
 -- value setting
 local my_python           = os.getenv("MYPYTHON")

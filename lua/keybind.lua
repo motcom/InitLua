@@ -53,6 +53,20 @@ keymap("n", "<Leader>cc", ":CopilotChatToggle<CR>", keyopt)
 keymap("n", "<Leader>ce", ":CopilotEnable<CR>", keyopt)
 keymap("n", "<Leader>cd", ":CopilotDisable<CR>", keyopt)
 
+keymap("n","<Leader>o",":MyNote<CR>",keyopt)
+
+-- my note
+local function my_note()
+   local my_note_path = os.getenv("MYNOTE")
+   if my_note_path then
+      vim.cmd("cd " .. my_note_path)
+      print("Set note dir: " .. my_note_path)
+   else
+      print("MYNOTE environment variable is not set.")
+   end
+end
+vim.api.nvim_create_user_command("MyNote", my_note, {})
+
 -- copilot toggle function
 local function copilot_enable()
    vim.cmd("Copilot enable")

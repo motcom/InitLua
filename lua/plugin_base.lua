@@ -49,8 +49,7 @@ require('nvim-treesitter.configs').setup {
    sync_install = false,
    ignore_install = {},
    auto_install = true,
-   ensure_installed = { "lua", "python", "json",
-      "markdown" },
+   ensure_installed = { "lua", "python", "json","toml","csv","rust","markdown" },
    indent = {
       enable = true
    },
@@ -138,28 +137,7 @@ end
 vim.api.nvim_create_user_command('FernPathLua', get_fern_selected_path, {})
 vim.keymap.set('n', 'yp', ':FernPathLua<CR>', { noremap = true, silent = true })
 
--- hex bin editor setup
 
-require 'hex'.setup {
-
-   -- CLI コマンド：16進数データをダンプするためのコマンド
-   dump_cmd = 'xxd -g 1 -u',
-
-   -- CLI コマンド：16進数データからバイナリに戻すためのコマンド
-   assemble_cmd = 'xxd -r',
-
-   -- BufReadPre（バッファ読み込み前）に実行される関数：バイナリかどうか判定する
-   is_file_binary_pre_read = function()
-      -- バッファの内容がバイナリデータかどうかを判定するロジックを記述
-      -- true または false を返す必要がある
-   end,
-
-   -- BufReadPost（バッファ読み込み後）に実行される関数：バイナリかどうか判定する
-   is_file_binary_post_read = function()
-      -- バッファの内容がバイナリデータかどうかを判定するロジックを記述
-      -- true または false を返す必要がある
-   end,
-}
 
 require("nvim-autopairs").setup {}
 

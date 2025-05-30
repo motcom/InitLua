@@ -34,14 +34,11 @@ require("packer").startup(function(use)
    -- lsp
    use "neovim/nvim-lspconfig"
 
-   -- hex
-   use {
-      'RaafatTurki/hex.nvim',
-      requires = { 'nvim-lua/plenary.nvim' },
-      config = function()
-         require("hex").setup()
-      end
-   }
+   -- dap
+   use { "jay-babu/mason-nvim-dap.nvim", requires = "williamboman/mason.nvim" }
+   use { "mfussenegger/nvim-dap" }
+   use { "rcarriga/nvim-dap-ui", config = function() require("dapui").setup() end }
+   use "nvim-neotest/nvim-nio"
    -- Snipet
    use "L3MON4D3/LuaSnip"
    use "saadparwaiz1/cmp_luasnip"

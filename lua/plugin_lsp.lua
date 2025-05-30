@@ -126,6 +126,9 @@ cmp.setup({
    sources = cmp.config.sources({
       { name = "copilot" },
       { name = "nvim_lsp" }, -- LSPからの補完
+      { name = 'nvim_lsp_signature_help'}, -- LSPのシグネチャヘルプ
+      { name = 'buffer', keyword_length = 2 },        -- source current buffer
+      { name = "luasnip" },   -- LuaSnipからの補完
       { name = "path" },     -- ファイルパス補完
    }),
 })

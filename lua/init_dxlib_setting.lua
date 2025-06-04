@@ -19,36 +19,21 @@ add_executable(MyDxLibApp main.cpp)
 
 # MinGWで必要なWindows系ライブラリとDxLibのリンク
 target_link_libraries(MyDxLibApp
-   DxLib
-   DxUseCLib
-   DxDrawFunc
-   jpeg
-   png
-   zlib
-   tiff
-   theora_static
-   vorbis_static
-   vorbisfile_static
-   ogg_static
-   bulletdynamics
-   bulletcollision
-   bulletmath
-   opusfile
-   opus
-   silk_common
-   celt
+   DxLib_vs2015_x64_MDd.lib
+   DxDrawFunc_vs2015_x64_MDd.lib
+   winmm.lib
+   dxguid.lib
+   dinput8.lib
 )
 
-target_include_directories(MyDxLibApp PRIVATE ${DXLIB})
 ]]
-
 
 local main_dxlib_file_path = "main.cpp"
 local main_dxlib_init = [[
 #include "DxLib.h"
 namespace dx = DxLib;
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+int main() {
    const int WIDTH = 640;
    const int HEIGHT = 480;
    const int BLACK = dx::GetColor(0, 0, 0);
@@ -73,8 +58,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
       dx::WaitTimer(33);
       if (dx::ProcessMessage() != 0) break;
       if (dx::CheckHitKey(KEY_INPUT_ESCAPE) == 1) break;
+   }
    return 0;
 }
+
 ]]
 
 -- clang-formatの設定ファイルを作成する
@@ -124,7 +111,7 @@ local write_make_file_dxlib_cpp = function()
 
 
    vim.cmd(
-   "!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc.exe -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
+   "!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
    vim.cmd("!cmake --build build --config DEBUG")
 
    vim.fn.system("cp build/compile_commands.json .")

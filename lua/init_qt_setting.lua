@@ -26,18 +26,17 @@ local cmake_file_path_qt = "CMakeLists.txt"
 local main_c_file_path_qt = "main.cpp"
 local main_c_init_qt = [[
 #include <QApplication>
-#include <QMainWindow>
+#include <QWidget>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QMainWindow window;
-    window.show();
+    QWidget wid;
+    wid.show();
 
     return app.exec();
 }
-
 ]]
 
 -- clang-formatの設定ファイルを作成する
@@ -87,7 +86,7 @@ local write_make_file_qt = function()
    end
 
    -- CMakeLists.txtをビルドしてコンパイルコマンドを生成する
-   vim.cmd('!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc.exe -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH="C:/Qt/6.9.0/mingw_64/lib/cmake"')
+   vim.cmd('!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH="C:/Qt/6.9.0/msvc2022_64/lib/cmake"')
    vim.cmd("!cmake --build build --config DEBUG")
 
    vim.fn.system("cp build/compile_commands.json .")

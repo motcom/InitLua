@@ -165,7 +165,7 @@ require("lspconfig").ruff.setup({
 
 require('lspconfig').clangd.setup({
    capabilities = capabilities,
-   cmd = { "clangd", "--compile-commands-dir=.", "--fallback-style=none", "--query-driver=C:/Qt/Tools/mingw1310_64/bin/g++.exe" },
+   cmd = { "clangd", "--compile-commands-dir=.", "--fallback-style=none"},
    filetype = { "c", "cpp" },
    on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")

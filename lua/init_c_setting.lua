@@ -69,7 +69,7 @@ local write_make_file = function()
    end
 
    -- CMakeLists.txtをビルドしてコンパイルコマンドを生成する
-   vim.cmd("!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=gcc.exe -DCMAKE_CXX_COMPILER=g++.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
+   vim.cmd("!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
    vim.cmd("!cmake --build build --config DEBUG")
    vim.fn.system("cp build/compile_commands.json .")
 end

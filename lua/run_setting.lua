@@ -66,12 +66,12 @@ local function run()
          local file = vim.fn.expand("%:t")
          local out = vim.fn.expand("%:r") .. ".exe"
          if ext == "c" then
-            print("gcc run:" .. out)
-            vim.fn.system("gcc -g -o " .. out .. " " .. file)
+            print("cl run:" .. out)
+            vim.fn.system("cl -g -o " .. out .. " " .. file)
             RunInTerminal(out)
          elseif ext == "cpp" then
-            print("g++ run:" .. out)
-            vim.fn.system("g++ -g -o " .. out .. " " .. file)
+            print("cl run:" .. out)
+            vim.fn.system("cl -g -o " .. out .. " " .. file)
             RunInTerminal(out)
          end
       end

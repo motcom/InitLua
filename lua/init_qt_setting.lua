@@ -15,6 +15,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_executable(MyQtApp
     main.cpp
+    MainWid.cpp
 )
 
 target_link_libraries(MyQtApp PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
@@ -23,20 +24,48 @@ target_link_libraries(MyQtApp PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
 local cmake_file_path_qt = "CMakeLists.txt"
 ------------------ cmake init end ---------------------
 
-local main_c_file_path_qt = "main.cpp"
-local main_c_init_qt = [[
+local main_cpp_file_path_qt = "main.cpp"
+local main_cpp_init_qt = [[
+#include "MainWid.h"
 #include <QApplication>
 #include <QWidget>
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+   QApplication app(argc, argv);
 
-    QWidget wid;
-    wid.show();
+   MainWid wid;
+   wid.show();
 
-    return app.exec();
+   return app.exec();
 }
+]]
+
+local wid_header_file_path_qt = "MainWid.h"
+local wid_header_src = [[
+#pragma once
+#include <QWidget>
+
+class MainWid : public QWidget
+{
+   Q_OBJECT
+public:
+   explicit MainWid(QWidget *parent = nullptr);
+   virtual ~MainWid()=default;
+
+};
+]]
+
+
+local wid_cpp_file_path_qt = "MainWid.cpp"
+local wid_cpp_src = [[
+#include "MainWid.h"
+
+MainWid::MainWid(QWidget *parent)
+    : QWidget(parent)
+{
+    // Initialization code can go here
+}  
 ]]
 
 -- clang-formatの設定ファイルを作成する
@@ -61,14 +90,29 @@ local write_make_file_qt = function()
    else
       print("Error: Unable to open CMakeLists.txt for writing.")
    end
-   print("main_cfile_path:" .. main_c_file_path_qt)
+   print("main_cfile_path:" .. main_cpp_file_path_qt)
 
-   -- main.cが存在しない場合にのみmain.cを作成する
-   if vim.fn.filereadable(main_c_file_path_qt) == 0 then
-      local mainc_file = io.open(main_c_file_path_qt, "w")
+   -- main.cppが存在しない場合にのみmain.cを作成する
+   if vim.fn.filereadable(main_cpp_file_path_qt) == 0 then
+      local mainc_file = io.open(main_cpp_file_path_qt, "w")
+      local wid_header_file = io.open(wid_header_file_path_qt, "w")
+      local wid_cpp_file = io.open(wid_cpp_file_path_qt, "w")
+      if wid_header_file then
+         wid_header_file:write(wid_header_src)
+         wid_header_file:close()
+      else
+         print("Error: Unable to open MainWid.h for writing.")
+      end
+      if wid_cpp_file then
+         wid_cpp_file:write(wid_cpp_src)
+         wid_cpp_file:close()
+      else
+         print("Error: Unable to open MainWid.cpp for writing.")
+      end
       if mainc_file then
-         mainc_file:write(main_c_init_qt)
+         mainc_file:write(main_cpp_init_qt)
          mainc_file:close()
+
       else
          print("Error: Unable to open main.c for writing.")
       end
@@ -91,7 +135,5 @@ local write_make_file_qt = function()
 
    vim.fn.system("cp build/compile_commands.json .")
 end
-
-
 
 vim.api.nvim_create_user_command("InitQt", write_make_file_qt, {})

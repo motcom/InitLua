@@ -14,10 +14,10 @@ local cmake_file_path = "CMakeLists.txt"
 ------------------ cmake init end ---------------------
 local main_c_file_path = "main.cpp"
 local main_c_init = [[
-#include <stdio.h>
+#include <iostream>
 
 int main() {
-    printf("Hello, World!\n");
+    std::cout << "Hello, World!" << std::endl;
     return 0;
 }
 ]]

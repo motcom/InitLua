@@ -51,7 +51,7 @@ local function run()
    elseif ext == "lua" then
       vim.cmd("w!")
       vim.cmd("!lua %")
-   elseif ext == "c" or ext=="cpp" then
+   elseif ext == "c" or ext == "cpp" or ext=="h" then
       vim.cmd("w!")
       local root = util.find_project_root()
       print(root .. "\\CMakeLists.txt")

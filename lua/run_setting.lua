@@ -5,6 +5,7 @@ local util = require("util") -- util.luaを読み込む
 -- Pythonコマンドを設定
 local python_command = "python"
 
+
 -- 実行コマンドを定義する関数
 local function create_run_command()
     local root_dir = util.find_project_root()
@@ -24,15 +25,6 @@ vim.api.nvim_create_user_command("Rum", function()
     print(run_command)
 end, {})
 
-function RunInTerminal(cmd)
-    vim.cmd("split")
-    vim.cmd("wincmd j")
-    vim.cmd("terminal")
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("A", true, true, true), "n", false)
-    vim.schedule(function()
-    vim.fn.chansend(vim.b.terminal_job_id, cmd .. "\r")
-  end)
-end
 
 --------------------------------- Python Runm Setting End-------------------------------------
 
@@ -58,25 +50,24 @@ local function run()
       if vim.fn.filereadable(root .. "\\CMakeLists.txt") == 1 then
          -- cmake がある場合
          print("cmake run")
-         vim.fn.system("cmake --build build --config DEBUG")
          local exe_file_name = util.getTargetExe()
-         RunInTerminal("build\\"..exe_file_name)
+         print("exe_file_name:" .. exe_file_name)
+         local build_strs = [[cmake --build build --config DEBUG&&build\\]]..exe_file_name
+         util.RunInTerminal(build_strs)
       else
          -- cmake がない場合
          local file = vim.fn.expand("%:t")
          local out = vim.fn.expand("%:r") .. ".exe"
          if ext == "c" then
-            print("cl run:" .. out)
-            vim.fn.system("cl -g -o " .. out .. " " .. file)
-            RunInTerminal(out)
+            local biuld_strs = "cl -g -o " .. out .. " " .. file
+            util.RunInTerminal(biuld_strs)
          elseif ext == "cpp" then
-            print("cl run:" .. out)
-            vim.fn.system("cl -g -o " .. out .. " " .. file)
-            RunInTerminal(out)
+            local build_strs = "cl -g -o " .. out .. " " .. file
+            util.RunInTerminal(build_strs)
          end
       end
    end
 end
-vim.api.nvim_create_user_command("Run", run, {})
+vim.api.nvim_create_user_command("R", run, {})
 -------------------------------- Run Setting End ----------------------------------------
 

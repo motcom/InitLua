@@ -1,5 +1,6 @@
 -- cmakelistsを自動生成しmain.cを作成するテンプレートのためのlua
 -- 一度biuldしcompiler jsonを作成する
+local util = require("util")
 
 ------------------ cmake init start -------------------
 local cmake_init_qt = [[
@@ -64,7 +65,8 @@ local wid_cpp_src = [[
 MainWid::MainWid(QWidget *parent)
     : QWidget(parent)
 {
-    // Initialization code can go here
+     // propeties
+     this->resize(400, 300);            // 初期サイズを400x300に設定
 }  
 ]]
 
@@ -129,10 +131,11 @@ local write_make_file_qt = function()
       end
    end
 
+   local qtlib_path = os.getenv("QTLIB_PATH")
    -- CMakeLists.txtをビルドしてコンパイルコマンドを生成する
-   vim.cmd('!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH="C:/Qt/6.9.0/msvc2022_64/lib/cmake"')
-   vim.cmd("!cmake --build build --config DEBUG")
-
+   local cmake_str = [[cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH="]]..qtlib_path..[["&&cmake --build build --config DEBUG]]
+   print("cmake_str:" .. cmake_str)
+   util.RunInTerminal(cmake_str)
    vim.fn.system("cp build/compile_commands.json .")
 end
 

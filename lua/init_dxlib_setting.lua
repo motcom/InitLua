@@ -17,7 +17,6 @@ link_directories(${DXLIB})
 
 add_executable(MyDxLibApp main.cpp)
 
-# MinGWで必要なWindows系ライブラリとDxLibのリンク
 target_link_libraries(MyDxLibApp
    DxLib_vs2015_x64_MDd.lib
    DxDrawFunc_vs2015_x64_MDd.lib

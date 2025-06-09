@@ -51,4 +51,14 @@ function M.isQtProject()
    return false
 end
 
+function M.RunInTerminal(cmd)
+    vim.cmd("split")
+    vim.cmd("wincmd j")
+    vim.cmd("terminal")
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("A", true, true, true), "n", false)
+    vim.schedule(function()
+    vim.fn.chansend(vim.b.terminal_job_id, cmd .. "\r")
+  end)
+end
+
 return M

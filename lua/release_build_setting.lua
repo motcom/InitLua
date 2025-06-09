@@ -5,7 +5,8 @@ local function release_build()
    if ext == "c" or filename == "CMakeLists.txt" or ext=="cpp"then
       vim.cmd("w!")
       if util.isQtProject() then
-         vim.cmd('!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH="C:/Qt/6.9.0/msvc2022_64/lib/cmake"')
+         local qtlib_path = os.getenv("QTLIB_PATH")
+         vim.cmd('!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH="'..qtlib_path..'"')
       else
          vim.cmd("!cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON")
       end

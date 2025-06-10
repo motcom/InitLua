@@ -38,12 +38,14 @@ function M.getTargetExe()
 end
 
 function M.isQtProject()
+
    local util = require("util")
    local root_path = util.find_project_root()
    local cmake_path = root_path .. "/CMakeLists.txt"
    local lines = io.lines(cmake_path) -- Check if CMakeLists.txt exists
+
    for line in lines do
-      if line:find("qt5") or line:find("qt6") then
+      if line:find("Qt5") or line:find("Qt6") then
          print("Qt is used in this project.")
          return true
       end

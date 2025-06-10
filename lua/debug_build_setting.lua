@@ -3,7 +3,7 @@ local util = require("util")
 local function debug_build()
    local ext = vim.fn.expand("%:e")
    local filename = vim.fn.expand("%:t")
-   if ext == "c" or filename == "CMakeLists.txt" or ext=="cpp"then
+   if ext == "c" or filename == "CMakeLists.txt" or ext=="cpp" or ext=="h"then
       vim.cmd("w!")
       if util.isQtProject() then
          local qtlib_path = os.getenv("QTLIB_PATH")

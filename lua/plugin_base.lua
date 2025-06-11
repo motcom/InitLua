@@ -91,7 +91,19 @@ zen_mode.setup({
 require("telescope").setup({
    defaults = {
       initial_mode = "normal"
-   }
+   },
+  pickers = {
+    buffers = {
+      mappings = {
+        i = {
+          ["<c-d>"] = require('telescope.actions').delete_buffer,
+        },
+        n = {
+          ["<c-d>"] = require('telescope.actions').delete_buffer,
+        }
+      }
+    }
+  }
 })
 
 local builtin = require('telescope.builtin')

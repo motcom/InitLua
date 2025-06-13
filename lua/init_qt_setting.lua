@@ -1,6 +1,7 @@
 -- cmakelistsを自動生成しmain.cを作成するテンプレートのためのlua
 -- 一度biuldしcompiler jsonを作成する
 local util = require("util")
+local common = require("init_cpp_common_setting")
 
 ------------------ cmake init start -------------------
 local cmake_init_qt = [[
@@ -70,17 +71,6 @@ MainWid::MainWid(QWidget *parent)
 }  
 ]]
 
--- clang-formatの設定ファイルを作成する
-local clang_format_file_path_qt = ".clang-format"
-local clang_format_init_qt = [[
-BasedOnStyle: LLVM
-IndentCaseLabels: true
-UseTab: Never
-TabWidth: 3 
-IndentWidth: 3
-BreakBeforeBraces: Allman
-NamespaceIndentation: All
-]]
 
 local write_make_file_qt = function()
    -- clang-formatの設定ファイルを作成する
@@ -120,20 +110,19 @@ local write_make_file_qt = function()
       end
    end
 
-   -- clang-formatの設定ファイルを作成する
-   if vim.fn.filereadable(clang_format_file_path_qt) == 0 then
-      local clang_format_file = io.open(clang_format_file_path_qt, "w")
-      if clang_format_file then
-         clang_format_file:write(clang_format_init_qt)
-         clang_format_file:close()
-      else
-         print("Error: Unable to open .clang-format for writing.")
-      end
-   end
+   common.create_clangd_format_file()
 
    local qtlib_path = os.getenv("QTLIB_PATH")
    -- CMakeLists.txtをビルドしてコンパイルコマンドを生成する
-   local cmake_str = [[cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=cl.exe -DCMAKE_CXX_COMPILER=cl.exe -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_PREFIX_PATH="]]..qtlib_path..[["&&cmake --build build --config DEBUG]]
+   local cmake_str =
+   [[cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug ^
+   -DCMAKE_C_COMPILER=cl.exe ^
+   -DCMAKE_CXX_COMPILER=cl.exe ^
+   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ^
+   -DCMAKE_PREFIX_PATH="]]
+   ..qtlib_path..
+   [["&& cmake --build build --config DEBUG]]
+
    print("cmake_str:" .. cmake_str)
    util.RunInTerminal(cmake_str)
    vim.fn.system("cp build/compile_commands.json .")

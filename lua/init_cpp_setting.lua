@@ -1,7 +1,7 @@
--- cmakelistsを自動生成しmain.cを作成するテンプレートのためのlua
--- 一度biuldしcompiler jsonを作成する
-
+local util = require("util")
+local common = require("init_cpp_common_setting")
 ------------------ cmake init start -------------------
+local cmake_file_path = "CMakeLists.txt"
 local cmake_init = [[
 cmake_minimum_required(VERSION 3.10)
 project(my_project LANGUAGES CXX)
@@ -9,7 +9,6 @@ project(my_project LANGUAGES CXX)
 add_executable(my_project main.cpp)
 ]]
 
-local cmake_file_path = "CMakeLists.txt"
 
 ------------------ cmake init end ---------------------
 local main_cpp_file_path = "main.cpp"
@@ -22,20 +21,8 @@ int main() {
 }
 ]]
 
--- clang-formatの設定ファイルを作成する
-local clang_format_file_path_cpp = ".clang-format"
-local clang_format_init_cpp = [[
-BasedOnStyle: LLVM
-IndentCaseLabels: true
-UseTab: Never
-TabWidth: 3 
-IndentWidth: 3
-BreakBeforeBraces: Allman
-NamespaceIndentation: All
-]]
 
 local write_make_file = function()
-   -- clang-formatの設定ファイルを作成する
    print("cmake path:" .. cmake_file_path)
    local cmake_file = io.open(cmake_file_path, "w")
    if cmake_file then
@@ -57,27 +44,22 @@ local write_make_file = function()
       end
    end
 
-   -- clang-formatの設定ファイルを作成する
-   if vim.fn.filereadable(clang_format_file_path_cpp) == 0 then
-      local clang_format_file = io.open(clang_format_file_path_cpp, "w")
-      if clang_format_file then
-         clang_format_file:write(clang_format_init_cpp)
-         clang_format_file:close()
-      else
-         print("Error: Unable to open .clang-format for writing.")
-      end
-   end
+   -- clang format file を作る
+   common.create_clangd_format_file()
 
    -- CMakeLists.txtをビルドしてコンパイルコマンドを生成する
-   vim.cmd([[
-   !cmake -S . -B build -G Ninja ^
+   local cmd = [[
+   cmake -S . -B build -G Ninja ^
    -DCMAKE_BUILD_TYPE=Debug ^
    -DCMAKE_C_COMPILER=cl.exe ^
    -DCMAKE_CXX_COMPILER=cl.exe ^
-   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-   ]])
-   vim.cmd("!cmake --build build --config DEBUG")
+   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON&&
+   cmake --build build --config DEBUG
+   ]]
+
+   util.RunInTerminal(cmd)
    vim.fn.system("cp build/compile_commands.json .")
+
 end
 
 vim.api.nvim_create_user_command("InitCpp", write_make_file, {})

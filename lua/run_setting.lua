@@ -5,7 +5,6 @@ local util = require("util") -- util.luaを読み込む
 -- Pythonコマンドを設定
 local python_command = "python"
 
-
 -- 実行コマンドを定義する関数
 local function create_run_command()
     local root_dir = util.find_project_root()
@@ -25,24 +24,25 @@ vim.api.nvim_create_user_command("Rum", function()
     print(run_command)
 end, {})
 
-
 --------------------------------- Python Runm Setting End-------------------------------------
 
 -- Cのrunセッティングはcmakeで作り直さないで実行しているファイルが増えた場合はbuildするひつようがあるのでBuildを実行してからrunをする
 -------------------------------- Run Setting Start ----------------------------------------
 
-local function run()
+local function run(opts)
+   local args = opts.args or ""
+   
    local ext = vim.fn.expand("%:e")
    if ext == "py" then
       vim.cmd("w!")
       if vim.fn.filereadable("main.py") == 1 then
-         vim.cmd("!python main.py")
+         vim.cmd("!python main.py ".. args)
       else
-         vim.cmd("!python %")
+         vim.cmd("!python % " .. args)
       end
    elseif ext == "lua" then
       vim.cmd("w!")
-      vim.cmd("!lua %")
+      vim.cmd("!lua %" .. args)
    elseif ext == "c" or ext == "cpp" or ext=="h" then
       vim.cmd("w!")
       local root = util.find_project_root()
@@ -52,22 +52,22 @@ local function run()
          print("cmake run")
          local exe_file_name = util.getTargetExe()
          print("exe_file_name:" .. exe_file_name)
-         local build_strs = [[cmake --build build --config DEBUG&&build\\]]..exe_file_name
+         local build_strs = [[cmake --build build --config DEBUG&&build\\]]..exe_file_name .. " " .. args
          util.RunInTerminal(build_strs)
       else
          -- cmake がない場合
          local file = vim.fn.expand("%:t")
          local out = vim.fn.expand("%:r") .. ".exe"
          if ext == "c" then
-            local biuld_strs = "cl -g -o " .. out .. " " .. file
+            local biuld_strs = "cl -g -o " .. out .. " " .. file  .. " " .. args
             util.RunInTerminal(biuld_strs)
          elseif ext == "cpp" then
-            local build_strs = "cl -g -o " .. out .. " " .. file
+            local build_strs = "cl -g -o " .. out .. " " .. file .. " " .. args
             util.RunInTerminal(build_strs)
          end
       end
    end
 end
-vim.api.nvim_create_user_command("R", run, {})
+vim.api.nvim_create_user_command("R", run, {nargs="*"})
 -------------------------------- Run Setting End ----------------------------------------
 

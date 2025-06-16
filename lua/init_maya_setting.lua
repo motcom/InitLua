@@ -1,13 +1,15 @@
 
 local util = require("util")
 local common = require("init_cpp_common_setting")
+local maya_devkit_location = os.getenv("MAYA_DEVKIT_LOCATION"):gsub("\\", "/")
+print("maya_devkit_location: " .. maya_devkit_location)
 
 local maya_cmake_src = [[
 cmake_minimum_required(VERSION 3.15)
 project(MyMayaPlugin)
 
 # Mayaのインストールパス（必要に応じて書き換え）
-set(MAYA_LOCATION "C:/Program Files/Autodesk/Maya2025/devkit")
+set(MAYA_LOCATION "]] .. maya_devkit_location .. [[")
 
 # プラグインのソースファイル
 set(SOURCES myPlugin.cpp)

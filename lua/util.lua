@@ -43,6 +43,13 @@ function M.isQtProject()
    local root_path = util.find_project_root()
    local cmake_path = root_path .. "/CMakeLists.txt"
    local lines = io.lines(cmake_path) -- Check if CMakeLists.txt exists
+   -- maya project‚Ìê‡false‚ğ•Ô‚·
+   for line in lines do
+      line = line:lower() -- ¬•¶š‚É•ÏŠ·‚µ‚Ä”äŠr
+      if line:find("maya") then
+         return false
+      end
+   end
 
    for line in lines do
       if line:find("Qt5") or line:find("Qt6") then

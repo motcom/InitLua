@@ -3,8 +3,31 @@
 local util = require("util")
 local common = require("init_cpp_common_setting")
 
+
+
+
+local write_make_file_qt_obj = function(opts)
+   local base_name = opts.args or "MyQtApp"
+   if base_name == "" then
+      base_name = "MyQtApp"
+   end
+
+   local split_names = vim.split(base_name, "_")
+
+   for i, name in ipairs(split_names) do
+      split_names[i] = name:sub(1, 1):upper() .. name:sub(2)
+   end
+   local class_name  = table.concat(split_names, "")
+
+   print("base_name:" .. base_name)
+   print("class_name:" .. class_name)
+
+
+
+
+
 ------------------ cmake init start -------------------
-local cmake_init_qt = [[
+local cmake_init_qt = string.format([[
 cmake_minimum_required(VERSION 3.16)
 project(MyQtApp)
 
@@ -17,58 +40,57 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_executable(MyQtApp
     main.cpp
-    main_obj.cpp
+    %s.cpp
 )
 
 target_link_libraries(MyQtApp PRIVATE Qt6::Core)
-]]
+]],base_name)
 
 local cmake_file_path_qt = "CMakeLists.txt"
 ------------------ cmake init end ---------------------
 
 local main_cpp_file_path_qt = "main.cpp"
-local main_cpp_init_qt = [[
-#include "main_obj.h"
+local main_cpp_init_qt = string.format([[
+#include "%s.h"
 #include <QObject>
 
 int main(int argc, char *argv[])
 {
 
-   MainObj obj;
+   %s obj;
    obj.print();
 
 }
-]]
+]],base_name, class_name)
 
-local wid_header_file_path_qt = "main_obj.h"
-local wid_header_src = [[
+
+local wid_header_file_path_qt = base_name..".h"
+local wid_header_src = string.format([[
 #pragma once
 #include <QObject>
 
-class MainObj : public QObject
+class %s : public QObject
 {
    Q_OBJECT
 public:
-   MainObj();
-   virtual ~MainObj()=default;
-   void print() { qDebug("Hello from MainObj!"); }
+   %s();
+   virtual ~%s()=default;
+   void print() { qDebug("Hello qt ob!"); }
 
 };
-]]
+]], class_name, class_name, class_name)
 
 
-local wid_cpp_file_path_qt = "main_obj.cpp"
-local wid_cpp_src = [[
-#include "main_obj.h"
+local wid_cpp_file_path_qt = base_name .. ".cpp"
+local wid_cpp_src = string.format([[
+#include "%s.h"
 
-MainObj::MainObj()
+%s::%s()
     : QObject()
 {
 }  
-]]
+]], base_name, class_name, class_name)
 
-
-local write_make_file_qt_obj = function(opts)
    -- clang-formatの設定ファイルを作成する
    print("cmake path:" .. cmake_file_path_qt)
    local cmake_file = io.open(cmake_file_path_qt, "w")

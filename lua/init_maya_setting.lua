@@ -52,33 +52,66 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 local maya_plugin_cpp_src = [[
 #include <maya/MFnPlugin.h>
 #include <maya/MPxCommand.h>
+#include <maya/MSyntax.h>
+#include <maya/MArgDatabase.h>
 #include <maya/MGlobal.h>
+#include <maya/MArgList.h>
 
 // コマンド本体クラス
-class HelloWorldCmd : public MPxCommand {
-public:
-    HelloWorldCmd() {}
-    virtual ~HelloWorldCmd() {}
-
-    static void* creator() {
-        return new HelloWorldCmd();
-    }
-
-    MStatus doIt(const MArgList& args) override {
-        MGlobal::displayInfo("Hello, Maya!");
-        return MS::kSuccess;
-    }
+class HelloCmd : public MPxCommand
+{
+ public:
+   virtual MStatus doIt(const MArgList &);
+   static void *creator() { return new HelloCmd; }
+   static MSyntax newSyntax();
+   static const char *messageFlag;
+   static const char *messageFlagLong;
 };
 
+const char *HelloCmd::messageFlag = "-m";
+const char *HelloCmd::messageFlagLong = "-message";
 
-MStatus initializePlugin(MObject obj) {
-    MFnPlugin plugin(obj, "YourName", "1.0", "Any");
-    return plugin.registerCommand("helloWorld", HelloWorldCmd::creator);
+MSyntax HelloCmd::newSyntax()
+{
+   MSyntax syntax;
+   syntax.addArg(MSyntax::kString);
+   syntax.addFlag(messageFlag, messageFlagLong, MSyntax::kString);
+   return syntax;
 }
 
-MStatus uninitializePlugin(MObject obj) {
-    MFnPlugin plugin(obj);
-    return plugin.deregisterCommand("helloWorld");
+MStatus HelloCmd::doIt(const MArgList &args)
+{
+   MString message{""};
+   MString tmp;
+   MArgDatabase argData(newSyntax(), args);
+
+   if (args.length() > 0)
+   {
+      message = args.asString(0);
+   }
+
+   if (argData.isFlagSet(messageFlag))
+   {
+      argData.getFlagArgument(messageFlag, 0, tmp);
+      message += tmp;
+   }
+
+   MGlobal::displayInfo(MString("Message: ") + message);
+
+   return MS::kSuccess;
+}
+
+MStatus initializePlugin(MObject obj)
+{
+   MFnPlugin plugin(obj, "YourName", "1.0", "Any");
+   return plugin.registerCommand("hello", HelloCmd::creator,
+                                 HelloCmd::newSyntax);
+}
+
+MStatus uninitializePlugin(MObject obj)
+{
+   MFnPlugin plugin(obj);
+   return plugin.deregisterCommand("hello");
 }
 ]]
 

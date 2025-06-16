@@ -17,10 +17,10 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 
 add_executable(MyQtApp
     main.cpp
-    MainWid.cpp
+    main_obj.cpp
 )
 
-target_link_libraries(MyQtApp PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
+target_link_libraries(MyQtApp PRIVATE Qt6::Core)
 ]]
 
 local cmake_file_path_qt = "CMakeLists.txt"
@@ -28,51 +28,47 @@ local cmake_file_path_qt = "CMakeLists.txt"
 
 local main_cpp_file_path_qt = "main.cpp"
 local main_cpp_init_qt = [[
-#include "MainWid.h"
-#include <QApplication>
-#include <QWidget>
+#include "main_obj.h"
+#include <QObject>
 
 int main(int argc, char *argv[])
 {
-   QApplication app(argc, argv);
 
-   MainWid wid;
-   wid.show();
+   MainObj obj;
+   obj.print();
 
-   return app.exec();
 }
 ]]
 
-local wid_header_file_path_qt = "MainWid.h"
+local wid_header_file_path_qt = "main_obj.h"
 local wid_header_src = [[
 #pragma once
-#include <QWidget>
+#include <QObject>
 
-class MainWid : public QWidget
+class MainObj : public QObject
 {
    Q_OBJECT
 public:
-   explicit MainWid(QWidget *parent = nullptr);
-   virtual ~MainWid()=default;
+   MainObj();
+   virtual ~MainObj()=default;
+   void print() { qDebug("Hello from MainObj!"); }
 
 };
 ]]
 
 
-local wid_cpp_file_path_qt = "MainWid.cpp"
+local wid_cpp_file_path_qt = "main_obj.cpp"
 local wid_cpp_src = [[
-#include "MainWid.h"
+#include "main_obj.h"
 
-MainWid::MainWid(QWidget *parent)
-    : QWidget(parent)
+MainObj::MainObj()
+    : QObject()
 {
-     // propeties
-     this->resize(400, 300);            // 初期サイズを400x300に設定
 }  
 ]]
 
 
-local write_make_file_qt = function()
+local write_make_file_qt_obj = function(opts)
    -- clang-formatの設定ファイルを作成する
    print("cmake path:" .. cmake_file_path_qt)
    local cmake_file = io.open(cmake_file_path_qt, "w")
@@ -128,4 +124,4 @@ local write_make_file_qt = function()
    vim.fn.system("cp build/compile_commands.json .")
 end
 
-vim.api.nvim_create_user_command("InitQtWidget", write_make_file_qt, {})
+vim.api.nvim_create_user_command("InitQtObj", write_make_file_qt_obj, {nargs = 1})

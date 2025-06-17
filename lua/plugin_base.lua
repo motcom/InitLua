@@ -116,7 +116,6 @@ vim.keymap.set('n', '<leader>fc', builtin.current_buffer_fuzzy_find, { desc = 'T
 vim.keymap.set('n', '<leader>fm', builtin.lsp_document_symbols, { desc = 'Telescope method find' })
 vim.keymap.set('n', '<leader>ft', builtin.treesitter, { desc = 'Telescope treesitter' })
 
-
 -- live server
 vim.api.nvim_create_user_command("LiveServer", function()
    -- Neovim のターミナルを開き、live-server を実行

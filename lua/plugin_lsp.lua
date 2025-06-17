@@ -165,7 +165,7 @@ require("lspconfig").ruff.setup({
 
 require('lspconfig').clangd.setup({
    capabilities = capabilities,
-   cmd = { "clangd", "--compile-commands-dir=.", "--fallback-style=none"},
+   cmd = { "clangd", "--compile-commands-dir=.", "--fallback-style=none","--header-insertion=never","--cross-file-rename"},
    filetype = { "c", "cpp" },
    on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")

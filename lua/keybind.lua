@@ -54,6 +54,7 @@ keymap("n", "<Leader>ce", ":CopilotEnable<CR>", keyopt)
 keymap("n", "<Leader>cd", ":CopilotDisable<CR>", keyopt)
 
 keymap("n","<Leader>o",":MyNote<CR>",keyopt)
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, keyopt)
 
 -- my note
 local function my_note()

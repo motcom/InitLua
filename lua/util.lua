@@ -38,22 +38,43 @@ function M.getTargetExe()
 end
 
 function M.isQtProject()
-
    local util = require("util")
    local root_path = util.find_project_root()
    local cmake_path = root_path .. "/CMakeLists.txt"
-   local lines = io.lines(cmake_path) -- Check if CMakeLists.txt exists
+   local lines ={}
+   for line in io.lines(cmake_path) do -- Check if CMakeLists.txt exists
+      table.insert(lines, line) -- 各行をテーブルに格納
+   end
+   
    -- maya projectの場合falseを返す
-   for line in lines do
+   for _,line in ipairs(lines) do
       line = line:lower() -- 小文字に変換して比較
       if line:find("maya") then
          return false
       end
    end
 
-   for line in lines do
+   for _,line in ipairs(lines) do
       if line:find("Qt5") or line:find("Qt6") then
          print("Qt is used in this project.")
+         return true
+      end
+   end
+   return false
+end
+
+function M.isOpen3DProject()
+   local util = require("util")
+   local root_path = util.find_project_root()
+   local cmake_path = root_path .. "/CMakeLists.txt"
+   local lines ={}
+   for line in io.lines(cmake_path) do -- Check if CMakeLists.txt exists
+      table.insert(lines, line) -- 各行をテーブルに格納
+   end
+
+   for _,line in ipairs(lines) do
+      if line:find("Open3D") then
+         print("Open3D is used in this project.")
          return true
       end
    end

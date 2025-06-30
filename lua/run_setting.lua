@@ -36,13 +36,19 @@ local function run(opts)
    if ext == "py" then
       vim.cmd("w!")
       if vim.fn.filereadable("main.py") == 1 then
-         vim.cmd("!python main.py ".. args)
+         local build_strs = "python main.py ".. args
+         util.RunInTerminal(build_strs)
       else
-         vim.cmd("!python % " .. args)
+         local filename = vim.api.nvim_buf_get_name(0)
+         local build_strs = "python " .. filename .. " " .. args
+         util.RunInTerminal(build_strs)
       end
    elseif ext == "lua" then
       vim.cmd("w!")
-      vim.cmd("!lua %" .. args)
+      local filename = vim.api.nvim_buf_get_name(0)
+      local build_strs = "lua " .. filename .." " .. args
+      util.RunInTerminal(build_strs)
+
    elseif ext == "c" or ext == "cpp" or ext=="h" then
       vim.cmd("w!")
       local root = util.find_project_root()

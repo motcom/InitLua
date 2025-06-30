@@ -11,8 +11,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
    end,
 })
 
--- minimap の設定
-vim.g.minimap_width = 10
 
 -- EasyMotionの<Leader><Leader>マッピングを無効化
 vim.g.EasyMotion_do_mapping = 0

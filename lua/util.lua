@@ -82,8 +82,8 @@ function M.isOpen3DProject()
 end
 
 function M.RunInTerminal(cmd)
-    vim.cmd("split")
-    vim.cmd("wincmd j")
+    vim.cmd("vsplit")
+    vim.cmd("wincmd l")
     vim.cmd("terminal")
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("A", true, true, true), "n", false)
     vim.schedule(function()

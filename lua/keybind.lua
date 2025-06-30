@@ -15,6 +15,7 @@ keymap("n", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
 keymap("x", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 keymap("n", "<ESC><ESC>", ":noh",keyopt)
+keymap("n", "q", ":q<CR>", keyopt)
 
 vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { noremap = true, silent = true })
 
@@ -43,8 +44,11 @@ keymap("t", "<C-e>", "<C-\\><C-n>:WinResizerStartResize<CR>", keyopt)
 keymap("n", "<C-c>", ":Cmd<CR>", keyopt)
 keymap("t", "<C-c>", "<C-\\><C-n>:q<CR>", keyopt)
 
--- MiniMap toggle
-keymap("n", "<Leader>m", ":MinimapToggle<CR>", keyopt)
+--  message copy
+vim.keymap.set('n', '<Leader>m', function()
+  vim.cmd('redir @+ | messages | redir END')
+end, { desc = 'Copy :messages to clipboard' })
+
 keymap("n", "<Leader><Leader>", ":ToggleFern<CR>", keyopt)
 keymap("n", "<Leader>z", ":ZenMode<CR>", keyopt)
 

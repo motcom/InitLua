@@ -12,10 +12,6 @@ require("packer").startup(function(use)
    use "simeji/winresizer"
    use "tpope/vim-commentary"
    use "tpope/vim-surround"
-   use {
-      'wfxr/minimap.vim',
-      as = 'minimap',
-   }
    -- 整形------------------------------------------
    use "mechatroner/rainbow_csv"
    use({

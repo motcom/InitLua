@@ -116,8 +116,8 @@ keymap("n", "<leader>s", ":RainbowShrink<CR>", keyopt)
 
 -- terminal open ----------------------------------------
 local function cmd()
-   vim.cmd("split")
-   vim.cmd("wincmd j")
+   vim.cmd("vs")
+   vim.cmd("wincmd l")
    vim.cmd("terminal")
    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("A", true, true, true), "n", false)
 end

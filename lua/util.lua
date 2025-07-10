@@ -91,4 +91,46 @@ function M.RunInTerminal(cmd)
   end)
 end
 
+function M.isAvrProject()
+   print("isAvrProject called")
+   local util = require("util")
+   local root_path = util.find_project_root()
+   local toolchain_path = root_path .. "/toolchain-avr.cmake"
+   print("toolchain_path:" .. toolchain_path)
+   -- toolchain-avr.cmakeが存在するかチェック
+   local toolchain_exists = vim.fn.filereadable(toolchain_path) == 1
+   if toolchain_exists then
+      print("toolchain-avr.cmake exists in this project.")
+      return true
+   end
+   return false
+end
+
+function M.getTargetHexFile()
+   local util = require("util")
+   local root_path = util.find_project_root()
+   local build_dir = root_path .. "/build/"
+   local hex_files = vim.fn.glob(build_dir .. "*.hex", false, true)
+   if #hex_files > 0 then
+      return hex_files[1]
+   else
+      print("Error: No hex file found in " .. build_dir)
+      return nil
+   end
+end
+
+function M.isArduinoProject()
+   local util = require("util")
+   local root_path = util.find_project_root()
+   local main_file_path = root_path .. "/main.cpp"
+   local lines = io.lines(main_file_path) -- Check if main.cpp exists
+   for line in lines do
+      if line:find("Arduino.h") then
+         print("Arduino is used in this project.")
+         return true
+      end
+   end
+   return false
+end
+
 return M

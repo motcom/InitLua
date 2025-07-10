@@ -23,6 +23,34 @@ vim.api.nvim_create_user_command("Rum", function()
     local result = vim.fn.system(run_command)
     print(run_command)
 end, {})
+-- AVR用---------------------------------------------------------------------------------------- 
+-- get_avr_mcu
+local function get_mcu_from_toolchain(tool_chain_file_path)
+    local mcu = nil
+    for line in io.lines(tool_chain_file_path) do
+        local cflags = line:match('set%(%s*CMAKE_C_FLAGS%s+"%-mmcu=(.-)"%s*%)')
+        if cflags then
+            mcu = cflags
+            break
+        end
+    end
+    return mcu
+end
+
+-- マッピングテーブル
+local mcu_map = {
+    atmega328p = "m328p",
+    atmega8    = "m8",
+    attiny2313 = "t2313",
+    attiny13   = "t13",
+    attiny13a  = "t13",   -- A付きでも略称は同じ
+    attiny85   = "t85",
+}
+
+-- 変換関数
+local function shorten_mcu(name)
+    return mcu_map[name]
+end
 
 --------------------------------- Python Runm Setting End-------------------------------------
 
@@ -53,6 +81,41 @@ local function run(opts)
       vim.cmd("w!")
       local root = util.find_project_root()
       print(root .. "\\CMakeLists.txt")
+
+      -- Arduinoプロジェクトの場合
+      if util.isArduinoProject() then
+         -- portを取得
+         local handle = io.popen("arduino-cli board list")
+         if not handle then
+            print("Error: Could not run arduino-cli board list")
+            return
+         end
+         local result = handle:read("*a")
+         handle:close()
+         local port = result:match("^(COM%d+)") or "COM3"
+
+         local fqbn = "arduino:avr:uno"
+         local cmd = string.format([[
+         arduino-cli compile --fqbn %s . && arduino-cli upload -p %s --fqbn %s .
+         ]], fqbn, port, fqbn)
+
+         util.RunInTerminal(cmd)
+         return
+      end
+
+      -- avrプロジェクトの場合
+      if util.isAvrProject() then
+         local root_path_and_toolchain = util.find_project_root() .."\\toolchain-avr.cmake"
+         local mmcu_cpu = get_mcu_from_toolchain(root_path_and_toolchain)
+         local avrdudge_mcu = shorten_mcu(mmcu_cpu)
+         local hex_file = util.getTargetHexFile()
+         local avr_build = [[
+         cmake --build build --config Debug &&
+         avrdude -c atmelice_isp -p ]] ..avrdudge_mcu.. [[ -U flash:w:]]..hex_file
+
+         util.RunInTerminal(avr_build)
+         return
+      end
       if vim.fn.filereadable(root .. "\\CMakeLists.txt") == 1 then
          -- cmake がある場合
          print("cmake run")

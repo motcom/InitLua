@@ -11,6 +11,14 @@ vim.api.nvim_create_autocmd("VimEnter", {
    end,
 })
 
+-- CSVViewの設定
+require("csvview").setup({
+   header = true, -- ヘッダーを表示
+   auto_detect = true, -- 自動でCSV形式を検出
+   delimiter = ",", -- デフォルトの区切り文字
+   quote_char = '"', -- デフォルトの引用符
+   max_width = 100, -- 最大列幅
+})
 
 -- EasyMotionの<Leader><Leader>マッピングを無効化
 vim.g.EasyMotion_do_mapping = 0
@@ -52,11 +60,6 @@ require('nvim-treesitter.configs').setup {
    },
    highlight = {
       enable = true,
-   },
-   rainbow = {
-      enable = true,
-      extended_mode = true,
-      max_file_lines = nil,
    },
    fold = {
       enable = true

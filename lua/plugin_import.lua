@@ -13,7 +13,6 @@ require("packer").startup(function(use)
    use "tpope/vim-commentary"
    use "tpope/vim-surround"
    -- 整形------------------------------------------
-   use "mechatroner/rainbow_csv"
    use({
       'iamcco/markdown-preview.nvim',
       run = function() vim.fn['mkdp#util#install']() end
@@ -22,6 +21,7 @@ require("packer").startup(function(use)
    use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
    use "norcalli/nvim-colorizer.lua"
    use "windwp/nvim-autopairs"
+   use "hat0uma/csvview.nvim"
    -- LSP関連プラグイン ---------------------------------------
    -- mason関係
    use 'williamboman/mason.nvim'

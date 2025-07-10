@@ -153,7 +153,7 @@ local function goto_tmp()
    print("cd " .. my_tmp .. "tmp.py")
 end
 vim.api.nvim_create_user_command("MyTmp", goto_tmp, {})
-vim.api.nvim_set_keymap("n", "<Leader>t", ":MyTmp<CR>", keyopt)
+keymap("n","<Leader>t",":MyTmp<CR>",keyopt)
 
 
 -- my function ----------------------------------

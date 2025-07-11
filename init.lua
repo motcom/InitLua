@@ -1,3 +1,4 @@
+require("getenv")
 require("util")
 require("base")
 require("keybind")

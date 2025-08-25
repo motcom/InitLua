@@ -29,18 +29,7 @@ op.autochdir = true
 -- encoding
 
 vim.opt.encoding = 'utf-8'
-vim.opt.fileencodings = { 'cp932', 'utf-8', 'euc-jp' }
-
--- C/C++ファイルは常にcp932で保存
-vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-   pattern = { "*.c", "*.cpp", "*.h" },
-   callback = function()
-      vim.bo.fileencoding = "cp932"
-      vim.opt_local.cindent = true
-      vim.opt_local.smartindent = false
-      vim.opt_local.cinoptions = ":0s"
-   end
-})
+vim.opt.fileencodings = {  'utf-8' }
 
 -- vifmrc filetype
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {

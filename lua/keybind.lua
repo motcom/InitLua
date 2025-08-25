@@ -16,6 +16,7 @@ keymap("x", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 keymap("n", "<ESC><ESC>", ":noh",keyopt)
 keymap("n", "q", ":q<CR>", keyopt)
+keymap("n", "s", ":w<CR>",keyopt)
 
 vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { noremap = true, silent = true })
 
@@ -225,29 +226,4 @@ vim.api.nvim_create_user_command('Fmt', function()
     vim.lsp.buf.format()
 end, {})
 
-
--- toggle header cpp
-vim.api.nvim_create_user_command('ToggleCppHeader', function()
-    local file_path = vim.fn.expand('%:p')
-    if file_path:match('%.cpp$') then
-        local header_path = file_path:gsub('%.cpp$', '.h')
-        if vim.fn.filereadable(header_path) == 1 then
-            vim.cmd('edit ' .. header_path)
-        else
-            print("Header file does not exist: " .. header_path)
-        end
-    elseif file_path:match('%.h$') then
-        local cpp_path = file_path:gsub('%.h$', '.cpp')
-        if vim.fn.filereadable(cpp_path) == 1 then
-            vim.cmd('edit ' .. cpp_path)
-        else
-            print("Source file does not exist: " .. cpp_path)
-        end
-    else
-        print("Not a .cpp or .h file: " .. file_path)
-    end
-end, {})
-
--- Keymap for toggling header files in C/C++ project_files  
-vim.api.nvim_set_keymap('n', '<F4>', ':ToggleCppHeader<CR>', keyopt)
 

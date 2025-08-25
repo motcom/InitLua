@@ -1,4 +1,3 @@
-local opts = { noremap = true, silent = true }
 
 --  mason setting -------------------------------------
 
@@ -26,7 +25,6 @@ require("mason").setup({
 -------------------------------------------------------
 -- LSPの設定
 local lspconfig = require("lspconfig")
-local util = require("lspconfig.util")
 local cmp = require("cmp")
 
 require("CopilotChat").setup({
@@ -163,39 +161,3 @@ require("lspconfig").ruff.setup({
 })
 
 
-require('lspconfig').clangd.setup({
-   capabilities = capabilities,
-   cmd = { "clangd", "--compile-commands-dir=.", "--fallback-style=none","--header-insertion=never","--cross-file-rename"},
-   filetype = { "c", "cpp" },
-   on_attach = function(_, bufnr)
-      local builtin = require("telescope.builtin")
-      local optf = { noremap = true, silent = true, buffer = bufnr }
-      vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
-      vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
-      vim.keymap.set("n", "gr", builtin.lsp_references, optf)
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
-      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
-   end,
-   root_dir = util.root_pattern(
-      ".git", "CMakeLists.txt"
-   ),
-})
-
-require('lspconfig').cmake.setup({
-   capabilities = require('cmp_nvim_lsp').default_capabilities(),
-   on_attach = function(_, bufnr)
-      local opf = { noremap = true, silent = true, buffer = bufnr }
-      local map = vim.keymap.set
-      map("n", "K", vim.lsp.buf.hover, opf)
-      map("n", "gd", vim.lsp.buf.definition, opf)
-      map("n", "<leader>rn", vim.lsp.buf.rename, opf)
-      map("n", "gr", vim.lsp.buf.references, opf)
-   end,
-   cmd = { "cmake-language-server" },
-   filetypes = { "cmake" },
-   init_options = {
-      buildDirectory = "build",
-   },
-   root_dir = require('lspconfig.util').root_pattern("CMakePresets.json", "CTestConfig.cmake", ".git", "build",
-      "CMakeLists.txt"),
-})

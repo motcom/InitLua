@@ -58,6 +58,12 @@ require("packer").startup(function(use)
       end,
    })
 
+   use {
+     "EdenEast/nightfox.nvim",
+     config = function()
+       vim.cmd.colorscheme "terafox"
+     end
+   }
 
    use { "CopilotC-Nvim/CopilotChat.nvim",
       requires = {

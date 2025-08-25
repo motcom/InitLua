@@ -69,3 +69,10 @@ vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldenable = false -- デフォルトでフォールドを開いた状態にする
 
 
+
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  pattern = {"*.rs", "Cargo.toml"},
+  callback = function()
+    vim.bo.fileencoding = "utf-8"
+  end,
+})

@@ -9,8 +9,13 @@ require("init_cpp_common_setting")
 require("init_qt_obj_setting")
 require("init_cpp_setting")
 require("init_qt_setting")
-require("init_dxlib_setting")
-require("init_maya_setting")
+require("init_sdl2")
+
+if vim.loop.os_uname().sysname == "Windows_NT" then
+   require("init_dxlib_setting")
+   require("init_maya_setting")
+end
+
 require("init_open3d_setting")
 require("init_avr_setting")
 require("init_arduino_setting")

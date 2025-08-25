@@ -14,6 +14,12 @@ local function release_build()
       end
       vim.cmd("!cmake --build build --config Release")
       vim.fn.system("cp build/compile_commands.json .")
+
+      elseif ext=="rs" then
+      local rust_release = [[
+         cargo build
+      ]]
+      util.RunInTerminal(rust_release)
    end
 end
 

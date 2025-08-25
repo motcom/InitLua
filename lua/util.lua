@@ -3,7 +3,9 @@ local M = {}
 -- プロジェクトのルートディレクトリを特定する関数
 function M.find_project_root()
     -- 探索対象のルート判定ファイル/ディレクトリ
-    local markers = {"cmakelists.txt","main.c", ".git", "pyproject.toml", "setup.py", "main.py" }
+    local markers = {"cmakelists.txt","main.c", ".git", "pyproject.toml", "setup.py", "main.py","Cargo.toml" ,"main.rs"}
+      
+   
     -- カレントディレクトリから上に探索
     local dir = vim.fn.getcwd()
 
@@ -79,6 +81,15 @@ function M.isOpen3DProject()
       end
    end
    return false
+end
+
+function M.RunInTerminalTabNew(cmd)
+    vim.cmd("tabnew")
+    vim.cmd("terminal")
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("A", true, true, true), "n", false)
+    vim.schedule(function()
+        vim.fn.chansend(vim.b.terminal_job_id, cmd .. "\r")
+    end)
 end
 
 function M.RunInTerminal(cmd)

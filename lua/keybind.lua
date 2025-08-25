@@ -9,13 +9,14 @@ keymap("n","<Leader>$",":e $MYVIMRC<CR>",keyopt)
 keymap("n", "<CR>", "i<CR><ESC>", keyopt)
 keymap("n", "0", "^", keyopt)
 keymap("n", "^", "0", keyopt)
-keymap("n", "f", "<Plug>(easymotion-overwin-f)", keyopt)
+keymap("n", "<C-f>", "<Plug>(easymotion-overwin-f)", keyopt)
 keymap("n", "<Leader>#", ":ColorizerToggle<CR>",keyopt)
 keymap("n", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
 keymap("x", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 keymap("n", "<ESC><ESC>", ":noh",keyopt)
 keymap("n", "q", ":q<CR>", keyopt)
+keymap("n", "s",":w<CR>",keyopt)
 
 vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { noremap = true, silent = true })
 
@@ -23,6 +24,7 @@ keymap("n", "<C-n>", ":cnext<CR>", keyopt)
 keymap("n", "<C-p>", ":cprev<CR>", keyopt)
 keymap("n", "<Tab>", ":bnext<CR>", keyopt)
 keymap("n", "<S-Tab>", ":bnext<CR>", keyopt)
+
 
 
 -- window move

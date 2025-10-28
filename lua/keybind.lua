@@ -45,7 +45,7 @@ keymap("n", "<C-c>", ":Cmd<CR>", keyopt)
 keymap("t", "<C-c>", "<C-\\><C-n>:q<CR>", keyopt)
 
 --  message copy
-vim.keymap.set('n', '<Leader>m', function()
+vim.keymap.set('n', 'ym', function()
   vim.cmd('redir @+ | messages | redir END')
 end, { desc = 'Copy :messages to clipboard' })
 

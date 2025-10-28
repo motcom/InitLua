@@ -48,14 +48,30 @@ local write_make_file = function()
    common.create_clangd_format_file()
 
    -- CMakeLists.txtをビルドしてコンパイルコマンドを生成する
-   local cmd = [[
+   local uname = vim.loop.os_uname().sysname
+   local cmd = ""
+
+   if uname == "Windows_NT" then
+       -- Windows用（MSVC）
+       cmd = [[
    cmake -S . -B build -G Ninja ^
    -DCMAKE_BUILD_TYPE=Debug ^
    -DCMAKE_C_COMPILER=cl.exe ^
    -DCMAKE_CXX_COMPILER=cl.exe ^
-   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON&&
+   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON &&
    cmake --build build --config DEBUG
    ]]
+   else
+       -- Linux用（GCC）
+       cmd = [[
+   cmake -S . -B build -G Ninja \
+   -DCMAKE_BUILD_TYPE=Debug \
+   -DCMAKE_C_COMPILER=gcc \
+   -DCMAKE_CXX_COMPILER=g++ \
+   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON &&
+   cmake --build build --config Debug
+   ]]
+   end
 
    util.RunInTerminal(cmd)
    vim.fn.system("cp build/compile_commands.json .")

@@ -132,14 +132,28 @@ local wid_cpp_src = string.format([[
 
    local qtlib_path = os.getenv("QTLIB_PATH")
    -- CMakeLists.txtをビルドしてコンパイルコマンドを生成する
-   local cmake_str =
-   [[cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug ^
-   -DCMAKE_C_COMPILER=cl.exe ^
-   -DCMAKE_CXX_COMPILER=cl.exe ^
-   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ^
-   -DCMAKE_PREFIX_PATH="]]
-   ..qtlib_path..
-   [["&& cmake --build build --config DEBUG]]
+
+   local uname = vim.loop.os_uname().sysname
+   local cmake_str = ""
+   if uname == "Windows_NT" then
+      -- Windows用 (MSVC)
+      cmake_str =
+      [[cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug ^
+      -DCMAKE_C_COMPILER=cl.exe ^
+      -DCMAKE_CXX_COMPILER=cl.exe ^
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ^
+      -DCMAKE_PREFIX_PATH="]] .. qtlib_path ..
+      [[" && cmake --build build --config DEBUG]]
+   else
+      -- Linux / macOS 用 (g++)
+      cmake_str =
+      [[cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_C_COMPILER=gcc \
+      -DCMAKE_CXX_COMPILER=g++ \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+      -DCMAKE_PREFIX_PATH="]] .. qtlib_path ..
+      [[" && cmake --build build --config Debug]]
+   end
 
    print("cmake_str:" .. cmake_str)
    util.RunInTerminal(cmake_str)

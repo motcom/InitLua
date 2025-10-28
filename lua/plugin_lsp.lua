@@ -116,8 +116,6 @@ cmp.setup({
          end
       end,
 
-      ["<C-b>"] = cmp.mapping.scroll_docs(-4),    -- ドキュメントを上にスクロール
-      ["<C-f>"] = cmp.mapping.scroll_docs(4),     -- ドキュメントを下にスクロール
       ["<C-Space>"] = cmp.mapping.complete(),
       ['<C-n>'] = cmp.mapping.select_next_item(), -- 次の候補に移動
       ['<C-p>'] = cmp.mapping.select_prev_item(), -- 前の候補に移動
@@ -125,11 +123,11 @@ cmp.setup({
    },
    sources = cmp.config.sources({
       { name = "copilot" },
-      { name = "nvim_lsp" }, -- LSPからの補完
-      { name = 'nvim_lsp_signature_help'}, -- LSPのシグネチャヘルプ
-      { name = 'buffer', keyword_length = 2 },        -- source current buffer
-      { name = "luasnip" },   -- LuaSnipからの補完
-      { name = "path" },     -- ファイルパス補完
+      { name = "nvim_lsp" },                   -- LSPからの補完
+      { name = 'nvim_lsp_signature_help' },    -- LSPのシグネチャヘルプ
+      { name = 'buffer',                 keyword_length = 2 }, -- source current buffer
+      { name = "luasnip" },                    -- LuaSnipからの補完
+      { name = "path" },                       -- ファイルパス補完
    }),
 })
 
@@ -142,30 +140,32 @@ cmp.setup.filetype('python', {
    })
 })
 
--- python formatter
-require("lspconfig").ruff.setup({
-   on_attach = function(client, bufnr)
-      -- 必要なら設定（例：hover無効）
-      client.server_capabilities.hoverProvider = false
-      client.server_capabilities.completionProvider = nil
-      client.server_capabilities.definitionProvider = false
-      client.server_capabilities.referencesProvider = false
-      client.server_capabilities.signatureHelpProvider = nil
-      client.server_capabilities.documentSymbolProvider = false
-      client.server_capabilities.workspaceSymbolProvider = false
-      client.server_capabilities.codeActionProvider = false
-      client.server_capabilities.renameProvider = false
-      client.server_capabilities.documentHighlightProvider = false
-      client.server_capabilities.semanticTokensProvider = nil
-      client.server_capabilities.documentFormattingProvider = true -- ← ここだけ残す
-      client.server_capabilities.documentRangeFormattingProvider = false
-   end,
-})
+if vim.loop.os_uname().sysname == "Windows_NT" then
+   -- python formatter
+   require("lspconfig").ruff.setup({
+      on_attach = function(client, bufnr)
+         -- 必要なら設定（例：hover無効）
+         client.server_capabilities.hoverprovider = false
+         client.server_capabilities.completionprovider = nil
+         client.server_capabilities.definitionprovider = false
+         client.server_capabilities.referencesprovider = false
+         client.server_capabilities.signaturehelpprovider = nil
+         client.server_capabilities.documentsymbolprovider = false
+         client.server_capabilities.workspacesymbolprovider = false
+         client.server_capabilities.codeactionprovider = false
+         client.server_capabilities.renameprovider = false
+         client.server_capabilities.documenthighlightprovider = false
+         client.server_capabilities.semantictokensprovider = nil
+         client.server_capabilities.documentformattingprovider = true -- ← ここだけ残す
+         client.server_capabilities.documentRangeFormattingProvider = false
+      end,
+   })
+end
 
 
 require('lspconfig').clangd.setup({
    capabilities = capabilities,
-   cmd = { "clangd", "--compile-commands-dir=.", "--fallback-style=none","--header-insertion=never","--cross-file-rename"},
+   cmd = { "clangd", "--compile-commands-dir=.", "--fallback-style=none", "--header-insertion=never", "--cross-file-rename" },
    filetype = { "c", "cpp" },
    on_attach = function(_, bufnr)
       local builtin = require("telescope.builtin")
@@ -180,6 +180,7 @@ require('lspconfig').clangd.setup({
       ".git", "CMakeLists.txt"
    ),
 })
+
 
 require('lspconfig').cmake.setup({
    capabilities = require('cmp_nvim_lsp').default_capabilities(),
@@ -199,3 +200,78 @@ require('lspconfig').cmake.setup({
    root_dir = require('lspconfig.util').root_pattern("CMakePresets.json", "CTestConfig.cmake", ".git", "build",
       "CMakeLists.txt"),
 })
+
+-- Rust Setting
+require("mason").setup()
+require("mason-lspconfig").setup({
+   ensure_installed = { "rust_analyzer" }
+})
+
+local lspconfig = require("lspconfig")
+lspconfig.rust_analyzer.setup({
+   settings = {
+      ["rust-analyzer"] = {
+         cargo = { allFeatures = true },
+         checkOnSave = { command = "clippy" },
+      }
+   }
+})
+
+
+
+
+-- OmniSharp (Unity / Mono 版)
+local omnisharp_mono = {
+   cmd = {
+      "mono",
+      os.getenv("HOME") .. "/.local/share/nvim/mason/packages/omnisharp-mono/omnisharp/OmniSharp.exe",
+      "--languageserver",
+      "--hostPID",
+      tostring(vim.fn.getpid())
+   },
+   root_dir = function(fname)
+      -- Unity プロジェクトなら Assembly-CSharp.csproj がある
+      local uroot = util.root_pattern("Assembly-CSharp.csproj")(fname)
+      if uroot ~= nil then
+         return uroot
+      end
+      return nil
+   end,
+   enable_editorconfig_support = true,
+   enable_import_completion = true,
+   organize_imports_on_format = true,
+
+   on_attach = function(_, bufnr)
+      local optf = { noremap = true, silent = true, buffer = bufnr }
+      local builtin = require("telescope.builtin")
+      vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
+      vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
+      vim.keymap.set("n", "gr", builtin.lsp_references, optf)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
+   end,
+   capabilities = capabilities,
+}
+
+-- OmniSharp (通常 .NET / Roslyn 版)
+local omnisharp_roslyn = {
+   cmd = { "omnisharp" }, -- mason がインストールした Roslyn 版を使用
+   root_dir = util.root_pattern("*.sln", "*.csproj", ".git"),
+   enable_editorconfig_support = true,
+   enable_import_completion = true,
+   organize_imports_on_format = true,
+   on_attach = function(_, bufnr)
+      local optf = { noremap = true, silent = true, buffer = bufnr }
+      local builtin = require("telescope.builtin")
+      vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
+      vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
+      vim.keymap.set("n", "gr", builtin.lsp_references, optf)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
+   end,
+   capabilities = capabilities,
+}
+
+-- 両方を登録
+lspconfig.omnisharp.setup(omnisharp_mono)
+lspconfig.omnisharp.setup(omnisharp_roslyn)

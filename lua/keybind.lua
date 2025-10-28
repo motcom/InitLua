@@ -34,7 +34,6 @@ keymap("n","<leader>l","<C-w>l",keyopt)
 
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
-keymap("i", ";;", "<C-o>A;", keyopt)
 keymap("i", "<C-l>", "<C-o>a", keyopt)
 keymap("i", "<C-h>", "<C-o>h", keyopt)
 
@@ -54,7 +53,7 @@ keymap("n", "<Leader><Leader>", ":ToggleFern<CR>", keyopt)
 keymap("n", "<Leader>z", ":ZenMode<CR>", keyopt)
 
 -- copilot  toggle
-keymap("n", "<Leader>cc", ":CopilotChatToggle<CR>", keyopt)
+keymap("n", "<Leader>cc", ":CopilotChatToggle<CR>:wincmd r<CR>", keyopt)
 keymap("n", "<Leader>ce", ":CopilotEnable<CR>", keyopt)
 keymap("n", "<Leader>cd", ":CopilotDisable<CR>", keyopt)
 
@@ -227,3 +226,28 @@ vim.api.nvim_create_user_command('Fmt', function()
 end, {})
 
 
+
+vim.api.nvim_create_user_command('SS', function(opts)
+  -- 選択範囲を取得
+  local start_pos = vim.fn.getpos("'<")
+  local end_pos = vim.fn.getpos("'>")
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, start_pos[2]-1, end_pos[2], false)
+
+  -- ファイルに書き込む
+  local filename = opts.args
+  local f = io.open(filename, "w")
+  if f then
+    for _, line in ipairs(lines) do
+      f:write(line .. "\n")
+    end
+    f:close()
+    print("Saved selection to " .. filename)
+  else
+    print("Could not open file: " .. filename)
+    return
+  end
+
+  -- 選択範囲を削除
+  vim.api.nvim_buf_set_lines(bufnr, start_pos[2]-1, end_pos[2], false, {})
+end, { nargs = 1, range = true })

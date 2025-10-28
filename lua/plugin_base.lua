@@ -53,7 +53,7 @@ require('nvim-treesitter.configs').setup {
    sync_install = false,
    ignore_install = {},
    auto_install = true,
-   ensure_installed = { "lua", "python", "json","toml","csv","rust","markdown" },
+   ensure_installed = { "lua", "python", "json","c_sharp","csv","markdown" },
    indent = {
       enable = true
    },
@@ -152,7 +152,3 @@ vim.keymap.set('n', 'yp', ':FernPathLua<CR>', { noremap = true, silent = true })
 
 require("nvim-autopairs").setup {}
 
--- doxygen comment
-vim.keymap.set("n", "<Leader>df", function()
-   require("neogen").generate()
-end, { desc = "Generate Doxygen comment" })

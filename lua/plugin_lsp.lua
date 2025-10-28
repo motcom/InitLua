@@ -1,4 +1,3 @@
-
 --  mason setting -------------------------------------
 
 require("mason").setup({
@@ -29,6 +28,7 @@ local cmp = require("cmp")
 
 require("CopilotChat").setup({
 })
+
 
 local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
 lspconfig.pyright.setup {
@@ -91,6 +91,7 @@ lspconfig.lua_ls.setup {
       vim.keymap.set("n", "gr", builtin.lsp_references, optf)
       vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
       vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
+       vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, optf)
    end,
 }
 
@@ -123,11 +124,11 @@ cmp.setup({
    },
    sources = cmp.config.sources({
       { name = "copilot" },
-      { name = "nvim_lsp" }, -- LSPからの補完
-      { name = 'nvim_lsp_signature_help'}, -- LSPのシグネチャヘルプ
-      { name = 'buffer', keyword_length = 2 },        -- source current buffer
-      { name = "luasnip" },   -- LuaSnipからの補完
-      { name = "path" },     -- ファイルパス補完
+      { name = "nvim_lsp" },                                   -- LSPからの補完
+      { name = 'nvim_lsp_signature_help' },                    -- LSPのシグネチャヘルプ
+      { name = 'buffer',                 keyword_length = 2 }, -- source current buffer
+      { name = "luasnip" },                                    -- LuaSnipからの補完
+      { name = "path" },                                       -- ファイルパス補完
    }),
 })
 
@@ -161,3 +162,27 @@ require("lspconfig").ruff.setup({
 })
 
 
+
+lspconfig.rust_analyzer.setup({
+  capabilities = capabilities,               -- ★ これを追加
+  settings = {
+    ["rust-analyzer"] = {
+      cargo = { allFeatures = true },
+      checkOnSave = { command = "clippy" },
+      completion = { autoimport = { enable = true } }, -- import 付き補完を許可
+      imports = { granularity = { group = "module" }, prefix = "self" },
+      procMacro = { enable = true },         -- マクロ多用プロジェクトなら必須
+    },
+  },
+  on_attach = function(_, bufnr)
+    local optf = { noremap = true, silent = true, buffer = bufnr }
+    local builtin = require("telescope.builtin")
+    vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
+    vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
+    vim.keymap.set("n", "gr", builtin.lsp_references, optf)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+    vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
+    vim.keymap.set("n", "<C-a>", vim.lsp.buf.code_action, optf)
+    vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, optf)
+  end,
+})

@@ -48,7 +48,7 @@ require("packer").startup(function(use)
    use "b0o/schemastore.nvim"
 
    -- copilot
-   use "github/copilot.vim"
+   use {"github/copilot.vim"}
    use({
       "zbirenbaum/copilot-cmp",
       after = { "copilot.lua" },

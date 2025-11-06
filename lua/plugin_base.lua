@@ -152,3 +152,41 @@ vim.keymap.set('n', 'yp', ':FernPathLua<CR>', { noremap = true, silent = true })
 
 require("nvim-autopairs").setup {}
 
+-- fern でカーソル下のファイルの絶対パスを推定して返す
+local function fern_current_abs_path()
+  if vim.bo.filetype ~= 'fern' or not vim.b.fern or not vim.b.fern.root or not vim.b.fern.root.bufname then
+    return nil
+  end
+  -- fern のルートは URI (例: "file:///home/you/WORK")
+  local root_uri = vim.b.fern.root.bufname
+  local root = vim.uri_to_fname(root_uri)   -- "file://..." → "/home/you/WORK"
+
+  -- 行頭アイコンや余白をできるだけ除去して「表示名」を取る
+  local line = vim.api.nvim_get_current_line()
+  -- 先頭の空白/絵文字っぽい記号を削る（レンダラー差をざっくり吸収）
+  local name = line
+    :gsub("^%s+", "")
+    :gsub("^[%z\1-\31%p%s]*", "")  -- 記号や制御文字類をざっくり削る
+    :gsub("%s+$", "")
+
+  if name == "" then return nil end
+  -- ルート + 表示名 で絶対パス化
+  local path = root .. "/" .. name
+  return vim.fn.fnamemodify(path, ":p")
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "fern",
+  callback = function()
+    -- <Leader>o: カーソル下が .html / .htm のときだけ既定アプリで開く
+    vim.keymap.set("n", "<Leader>o", function()
+      local name = vim.fn.expand("<cfile>"):lower()
+      if name:match("%.html?$") then
+        return "<Plug>(fern-action-open:system)"
+      else
+        vim.notify("HTMLファイルではありません")
+        return ""
+      end
+    end, { buffer = true, expr = true, silent = true })
+  end,
+})

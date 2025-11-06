@@ -34,6 +34,7 @@ keymap("n","<leader>l","<C-w>l",keyopt)
 
 -- insert
 keymap("i", "jj", "<ESC>", keyopt)
+keymap("i", ";;", "<ESC>A;", keyopt)
 keymap("i", "<C-l>", "<C-o>a", keyopt)
 keymap("i", "<C-h>", "<C-o>h", keyopt)
 
@@ -57,7 +58,6 @@ keymap("n", "<Leader>cc", ":CopilotChatToggle<CR>:wincmd r<CR>", keyopt)
 keymap("n", "<Leader>ce", ":CopilotEnable<CR>", keyopt)
 keymap("n", "<Leader>cd", ":CopilotDisable<CR>", keyopt)
 
-keymap("n","<Leader>o",":MyNote<CR>",keyopt)
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, keyopt)
 
 -- my note

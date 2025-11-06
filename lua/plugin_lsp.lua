@@ -1,5 +1,6 @@
 --  mason setting -------------------------------------
 
+
 require("mason").setup({
    install_root_dir = vim.fn.stdpath("data") .. "/mason",
    PATH = "prepend",
@@ -23,15 +24,14 @@ require("mason").setup({
 
 -------------------------------------------------------
 -- LSPの設定
-local lspconfig = require("lspconfig")
 local cmp = require("cmp")
 
 require("CopilotChat").setup({
 })
 
 
-local capabilities = require 'cmp_nvim_lsp'.default_capabilities()
-lspconfig.pyright.setup {
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+vim.lsp.config("pyright", {
    on_attach = function(_, bufnr)
       local optf = { noremap = true, silent = true, buffer = bufnr }
       local builtin = require("telescope.builtin")
@@ -56,10 +56,10 @@ lspconfig.pyright.setup {
          },
       },
    },
-}
+})
 
 -- json setting
-require("lspconfig").jsonls.setup({
+vim.lsp.config('jsonls', {
    capabilities = capabilities,
    settings = {
       json = {
@@ -70,7 +70,7 @@ require("lspconfig").jsonls.setup({
    },
 })
 
-lspconfig.lua_ls.setup {
+vim.lsp.config("lua_ls", {
    settings = {
       Lua = {
          runtime = { version = 'LuaJIT' },
@@ -91,9 +91,9 @@ lspconfig.lua_ls.setup {
       vim.keymap.set("n", "gr", builtin.lsp_references, optf)
       vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
       vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
-       vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, optf)
+      vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, optf)
    end,
-}
+})
 
 
 local luasnip = require("luasnip")
@@ -108,11 +108,7 @@ cmp.setup({
    },
    mapping = {
       ['<Tab>'] = function(fallback)
-         if require("cmp").visible() then
-            require("cmp").confirm({ select = true })
-         else
-            fallback()
-         end
+         if require("cmp").visible() then require("cmp").confirm({ select = true }) else fallback() end
       end,
 
       ["<C-b>"] = cmp.mapping.scroll_docs(-4),    -- ドキュメントを上にスクロール
@@ -142,7 +138,7 @@ cmp.setup.filetype('python', {
 })
 
 -- python formatter
-require("lspconfig").ruff.setup({
+vim.lsp.config('ruff', {
    on_attach = function(client, bufnr)
       -- 必要なら設定（例：hover無効）
       client.server_capabilities.hoverProvider = false
@@ -162,27 +158,69 @@ require("lspconfig").ruff.setup({
 })
 
 
+vim.lsp.config("rust_analyzer", {
+   capabilities = capabilities, -- ★ これを追加
+   settings = {
+      ["rust-analyzer"] = {
+         cargo = { allFeatures = true },
+         checkOnSave = true,
+         completion = { autoimport = { enable = true } }, -- import 付き補完を許可
+         imports = { granularity = { group = "module" }, prefix = "self" },
+         procMacro = { enable = true },                   -- マクロ多用プロジェクトなら必須
+      },
+   },
+   on_attach = function(_, bufnr)
+      local optf = { noremap = true, silent = true, buffer = bufnr }
+      local builtin = require("telescope.builtin")
+      vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
+      vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
+      vim.keymap.set("n", "gr", builtin.lsp_references, optf)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+      vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
+      vim.keymap.set("n", "<C-a>", vim.lsp.buf.code_action, optf)
+      vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, optf)
+   end,
+})
 
-lspconfig.rust_analyzer.setup({
-  capabilities = capabilities,               -- ★ これを追加
-  settings = {
-    ["rust-analyzer"] = {
-      cargo = { allFeatures = true },
-      checkOnSave = { command = "clippy" },
-      completion = { autoimport = { enable = true } }, -- import 付き補完を許可
-      imports = { granularity = { group = "module" }, prefix = "self" },
-      procMacro = { enable = true },         -- マクロ多用プロジェクトなら必須
-    },
-  },
+-- ---- Slint filetype （vim-slint を使わない場合の保険） ----
+vim.api.nvim_create_augroup("slint_ft", { clear = true })
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = "slint_ft",
+  pattern = "*.slint",
+  callback = function()
+    vim.bo.filetype = "slint"
+  end,
+})
+
+-- ---- Slint LSP -------------------------------------------------
+vim.lsp.config("slint_lsp", {
+  cmd = { "slint-lsp" },                 -- cargo install slint-lsp
+  filetypes = { "slint" },
+  -- 簡易ルート検出（必要なら root_dir を使う方法に差し替え可）
+  root_markers = { ".git", "slint.toml" },
+  -- もう少し厳密にやりたい場合はこちらを使う:
+  -- root_dir = function(fname)
+  --   local root = vim.fs.find({ "slint.toml", ".git" }, { upward = true, path = fname })[1]
+  --   return root and vim.fs.dirname(root) or vim.loop.cwd()
+  -- end,
+
+  -- Slint LSP 固有の設定があればここに
+  settings = {},
   on_attach = function(_, bufnr)
+    -- 既存サーバと合わせたキーマップ（Telescope を使用）
     local optf = { noremap = true, silent = true, buffer = bufnr }
     local builtin = require("telescope.builtin")
     vim.keymap.set("n", "gd", builtin.lsp_definitions, optf)
     vim.keymap.set("n", "gi", builtin.lsp_implementations, optf)
     vim.keymap.set("n", "gr", builtin.lsp_references, optf)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, optf)
+    vim.keymap.set("n", "K",  vim.lsp.buf.hover, optf)
     vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
-    vim.keymap.set("n", "<C-a>", vim.lsp.buf.code_action, optf)
-    vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, optf)
+    vim.keymap.set("n", "<leader>d", builtin.lsp_type_definitions, optf)
+    vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { noremap = true, silent = true, buffer = bufnr })
   end,
+  capabilities = require("cmp_nvim_lsp").default_capabilities(),
 })
+
+-- 既存の enable リストに 'slint_lsp' を足す
+vim.lsp.enable({ 'pyright', 'jsonls', 'lua_ls', 'ruff', 'rust_analyzer', 'slint_lsp' })
+vim.lsp.enable({ 'pyright', 'jsonls', 'lua_ls', 'ruff', 'rust_analyzer' })

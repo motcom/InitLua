@@ -12,9 +12,9 @@ op.backup      = false
 op.number      = false
 op.smartindent = true
 op.expandtab   = true
-op.tabstop     = 3
-op.softtabstop = 3
-op.shiftwidth  = 3
+op.tabstop     = 4
+op.softtabstop = 4
+op.shiftwidth  = 4
 op.title       = false
 op.ignorecase  = true
 op.shortmess:append "I"

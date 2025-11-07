@@ -19,7 +19,7 @@ require("packer").startup(function(use)
    })
    use "folke/zen-mode.nvim"
    use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
-   use "norcalli/nvim-colorizer.lua"
+   use {"norcalli/nvim-colorizer.lua"}
    use "hat0uma/csvview.nvim"
    -- LSP関連プラグイン ---------------------------------------
    -- mason関係

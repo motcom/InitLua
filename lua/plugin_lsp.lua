@@ -84,6 +84,19 @@ vim.lsp.config('lua_ls', {
       vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, optf)
       vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, optf)
    end,
+ settings = {
+    Lua = {
+      runtime = { version = "LuaJIT" },        -- NeovimのLua実行環境
+      diagnostics = { globals = { "vim" } },   -- 'vim' を未定義扱いしない
+      workspace = {
+        checkThirdParty = false,
+        library = vim.api.nvim_get_runtime_file("", true), -- Neovimのランタイムを型解決に含める
+      },
+      telemetry = { enable = false },
+      completion = { callSnippet = "Replace" },
+      hint = { enable = true },
+    },
+  },
 })
 
 
@@ -192,7 +205,7 @@ vim.lsp.config("slint_lsp", {
 
 -- nvim-cmp 設定（あなたのまま）
 local luasnip = require("luasnip")
-cmp.setup({
+require("cmp").setup({
    window = { documentation = cmp.config.window.bordered() },
    snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
    mapping = {

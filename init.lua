@@ -5,4 +5,4 @@ require("plugin_import")
 require("plugin_base")
 require("plugin_lsp")
 require("run_setting")
-
+require("build_setting")

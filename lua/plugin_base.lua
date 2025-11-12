@@ -191,3 +191,6 @@ vim.api.nvim_create_autocmd("FileType", {
       end, { buffer = true, expr = true, silent = true })
    end,
 })
+
+-- ロードの進行状況がわかるplugin
+require("fidget").setup({})

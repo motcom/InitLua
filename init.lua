@@ -1,4 +1,5 @@
 require("base")
+require("autocmd_setting")
 require("util")
 require("keybind")
 require("plugin_import")

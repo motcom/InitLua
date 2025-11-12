@@ -16,7 +16,7 @@ keymap("x", "<leader>a", "<Plug>(EasyAlign)*", keyopt)
 keymap("n", "<f2>", "ggVGy<C-o>", keyopt)
 keymap("n", "<ESC><ESC>", ":noh",keyopt)
 keymap("n", "q", ":q<CR>", keyopt)
-keymap("n", "s", ":w<CR>",keyopt)
+keymap("n", "s", ":w<CR>:Fmt<CR>",keyopt)
 
 vim.keymap.set('n', '<C-k>', vim.diagnostic.open_float, { noremap = true, silent = true })
 

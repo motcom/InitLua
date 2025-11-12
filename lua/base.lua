@@ -52,9 +52,3 @@ vim.diagnostic.config({ severity_sort = true })
 
 
 
--- フォールディングをexprに設定し、treesitterのfoldexprを使用
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-vim.o.foldenable = false -- デフォルトでフォールドを開いた状態にする
-
-
